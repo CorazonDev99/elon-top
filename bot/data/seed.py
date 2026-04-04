@@ -6,7 +6,7 @@ Run once on first setup.
 
 import asyncio
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from bot.database.engine import engine, async_session
 from bot.database.models import Base, Region, District, Category, AdFormat
@@ -85,11 +85,10 @@ async def seed_ad_formats(session):
 
 
 async def create_tables():
-    """Drop old tables and create all tables fresh."""
+    """Create tables if they don't exist."""
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-    print("✅ Tables recreated (old tables dropped).")
+    print("✅ Tables ready.")
 
 
 async def run_seed():
