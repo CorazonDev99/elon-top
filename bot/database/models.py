@@ -1,0 +1,174 @@
+from datetime import datetime, date
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    func,
+)
+from sqlalchemy.orm import DeclarativeBase, relationship
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    telegram_id = Column(BigInteger, unique=True, nullable=False, index=True)
+    full_name = Column(String(255), nullable=True)
+    username = Column(String(255), nullable=True)
+    phone = Column(String(20), nullable=True)
+    language = Column(String(5), default="uz")
+    is_blocked = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
+
+    channels = relationship("Channel", back_populates="owner")
+    orders = relationship("Order", back_populates="advertiser")
+
+    def __repr__(self):
+        return f"<User {self.telegram_id} ({self.full_name})>"
+
+
+class Region(Base):
+    __tablename__ = "regions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name_uz = Column(String(100), nullable=False)
+    name_ru = Column(String(100), nullable=False)
+    emoji = Column(String(10), default="📍")
+    sort_order = Column(Integer, default=0)
+
+    districts = relationship("District", back_populates="region", order_by="District.sort_order")
+
+    def __repr__(self):
+        return f"<Region {self.name_uz}>"
+
+
+class District(Base):
+    __tablename__ = "districts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    region_id = Column(Integer, ForeignKey("regions.id"), nullable=False)
+    name_uz = Column(String(100), nullable=False)
+    name_ru = Column(String(100), nullable=False)
+    sort_order = Column(Integer, default=0)
+
+    region = relationship("Region", back_populates="districts")
+    channels = relationship("Channel", back_populates="district")
+
+    def __repr__(self):
+        return f"<District {self.name_uz}>"
+
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name_uz = Column(String(100), nullable=False)
+    name_ru = Column(String(100), nullable=False)
+    emoji = Column(String(10), default="📁")
+    sort_order = Column(Integer, default=0)
+
+    channels = relationship("Channel", back_populates="category")
+
+    def __repr__(self):
+        return f"<Category {self.emoji} {self.name_uz}>"
+
+
+class Channel(Base):
+    __tablename__ = "channels"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    owner_telegram_id = Column(BigInteger, ForeignKey("users.telegram_id"), nullable=False)
+    district_id = Column(Integer, ForeignKey("districts.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+    channel_username = Column(String(255), nullable=False)
+    channel_title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    subscribers_count = Column(Integer, default=0)
+    avg_views = Column(Integer, default=0)
+    is_verified = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    owner = relationship("User", back_populates="channels")
+    district = relationship("District", back_populates="channels")
+    category = relationship("Category", back_populates="channels")
+    pricing = relationship(
+        "ChannelPricing", back_populates="channel", cascade="all, delete-orphan"
+    )
+    orders = relationship("Order", back_populates="channel")
+
+    def __repr__(self):
+        return f"<Channel @{self.channel_username}>"
+
+
+class AdFormat(Base):
+    __tablename__ = "ad_formats"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name_uz = Column(String(100), nullable=False)
+    name_ru = Column(String(100), nullable=False)
+    description_uz = Column(String(255), nullable=True)
+    description_ru = Column(String(255), nullable=True)
+    sort_order = Column(Integer, default=0)
+
+    pricing = relationship("ChannelPricing", back_populates="ad_format")
+
+    def __repr__(self):
+        return f"<AdFormat {self.name_uz}>"
+
+
+class ChannelPricing(Base):
+    __tablename__ = "channel_pricing"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id = Column(Integer, ForeignKey("channels.id", ondelete="CASCADE"), nullable=False)
+    ad_format_id = Column(Integer, ForeignKey("ad_formats.id"), nullable=False)
+    price = Column(Integer, nullable=False)  # UZS
+
+    channel = relationship("Channel", back_populates="pricing")
+    ad_format = relationship("AdFormat", back_populates="pricing")
+
+    def __repr__(self):
+        return f"<Pricing ch={self.channel_id} fmt={self.ad_format_id} price={self.price}>"
+
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    advertiser_telegram_id = Column(
+        BigInteger, ForeignKey("users.telegram_id"), nullable=False
+    )
+    channel_id = Column(Integer, ForeignKey("channels.id"), nullable=False)
+    ad_format_id = Column(Integer, ForeignKey("ad_formats.id"), nullable=False)
+    ad_text = Column(Text, nullable=True)
+    ad_media_file_id = Column(String(255), nullable=True)
+    ad_media_type = Column(String(20), nullable=True)  # photo, video, document
+    status = Column(String(20), default="pending", index=True)
+    # statuses: pending -> accepted -> payment_pending -> paid -> published -> completed
+    #           pending -> rejected
+    #           pending -> cancelled (by advertiser)
+    price = Column(Integer, nullable=False)  # UZS
+    desired_date = Column(Date, nullable=True)
+    payment_screenshot_file_id = Column(String(255), nullable=True)
+    rejection_reason = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    advertiser = relationship("User", back_populates="orders")
+    channel = relationship("Channel", back_populates="orders")
+    ad_format = relationship("AdFormat")
+
+    def __repr__(self):
+        return f"<Order #{self.id} status={self.status}>"
