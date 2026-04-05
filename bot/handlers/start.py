@@ -110,7 +110,7 @@ async def my_orders_menu(message: Message, lang: str = "uz", **kwargs):
     await show_my_orders(message, lang=lang, **kwargs)
 
 
-@router.message(F.text.in_(["📺 Mening kanallarim", "📺 Мои каналы"]))
+@router.message(F.text.in_(["📺 Kanal/Guruhlarim", "📺 Каналы/Группы"]))
 async def my_channels_menu(message: Message, lang: str = "uz", **kwargs):
     from bot.handlers.channel_owner import show_my_channels
     await show_my_channels(message, lang=lang, **kwargs)
