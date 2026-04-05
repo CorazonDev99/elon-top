@@ -278,7 +278,7 @@ TEXTS = {
         "📢 Сервис размещения рекламы в\n"
         "Telegram-каналах по всему Узбекистану.\n\n"
         "🤖 Бот: @oson_reklama_uz_bot\n"
-        "📞 Контакт: @admin_username\n\n"
+        "📞 Контакт: @C_Rosinant\n\n"
         "© 2025 Oson Reklama"
     ),
 

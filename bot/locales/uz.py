@@ -278,7 +278,7 @@ TEXTS = {
         "📢 O'zbekiston bo'ylab Telegram kanallarda\n"
         "reklama joylashtirish xizmati.\n\n"
         "🤖 Bot: @oson_reklama_uz_bot\n"
-        "📞 Aloqa: @admin_username\n\n"
+        "📞 Aloqa: @C_Rosinant\n\n"
         "© 2025 Oson Reklama"
     ),
 
