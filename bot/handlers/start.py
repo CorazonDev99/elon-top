@@ -30,6 +30,24 @@ async def cmd_start(message: Message, state: FSMContext, lang: str = "uz", **kwa
 
     caption = get_text("welcome", lang)
 
+    # Notify referrer if this is a new referral
+    referrer = kwargs.get("referrer")
+    if referrer:
+        try:
+            ref_lang = referrer.language or "uz"
+            await message.bot.send_message(
+                chat_id=referrer.telegram_id,
+                text=get_text(
+                    "referral.new_join", ref_lang,
+                    name=message.from_user.full_name or "—",
+                    count=referrer.referral_count,
+                    bonus="1,000",
+                ),
+                parse_mode="HTML",
+            )
+        except Exception:
+            pass
+
     try:
         if _welcome_photo_file_id:
             # Use cached file_id (faster)

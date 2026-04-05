@@ -23,9 +23,16 @@ class UserRegisterMiddleware(BaseMiddleware):
 
         # Extract user from update
         user = None
+        referral_id = None
         if isinstance(event, Update):
             if event.message and event.message.from_user:
                 user = event.message.from_user
+                # Check for referral deep link: /start ref_123456
+                if event.message.text and event.message.text.startswith("/start ref_"):
+                    try:
+                        referral_id = int(event.message.text.split("ref_")[1])
+                    except (ValueError, IndexError):
+                        pass
             elif event.callback_query and event.callback_query.from_user:
                 user = event.callback_query.from_user
 
@@ -39,12 +46,26 @@ class UserRegisterMiddleware(BaseMiddleware):
         db_user = result.scalar_one_or_none()
 
         if not db_user:
+            # New user
             db_user = User(
                 telegram_id=user.id,
                 full_name=user.full_name,
                 username=user.username,
                 language="uz",
             )
+
+            # Process referral
+            if referral_id and referral_id != user.id:
+                referrer_result = await session.execute(
+                    select(User).where(User.telegram_id == referral_id)
+                )
+                referrer = referrer_result.scalar_one_or_none()
+                if referrer:
+                    db_user.referred_by = referral_id
+                    referrer.referral_count = (referrer.referral_count or 0) + 1
+                    referrer.referral_bonus = (referrer.referral_bonus or 0) + 1000  # +1000 UZS bonus
+                    data["referrer"] = referrer  # For notification
+
             session.add(db_user)
             await session.commit()
             await session.refresh(db_user)
@@ -64,3 +85,4 @@ class UserRegisterMiddleware(BaseMiddleware):
         data["lang"] = db_user.language or "uz"
 
         return await handler(event, data)
+

@@ -20,6 +20,7 @@ TEXTS = {
     "menu.my_channels": "📺 Mening kanallarim",
     "menu.settings": "⚙️ Sozlamalar",
     "menu.about": "ℹ️ Bot haqida",
+    "menu.referral": "👥 Do'stlarni taklif qilish",
     "menu.language": "🌐 Tilni o'zgartirish",
     "menu.back": "⬅️ Orqaga",
     "menu.home": "🏠 Bosh menyu",
@@ -334,4 +335,25 @@ TEXTS = {
         "✅ Yakunlangan: <b>{completed}</b>\n"
         "💰 Jami sarflangan: <b>{total_spent} so'm</b>"
     ),
+
+    # ─── Referral ───
+    "referral.panel": (
+        "👥 <b>Do'stlarni taklif qiling!</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "Har bir taklif qilingan do'st uchun\n"
+        "siz <b>1,000 so'm</b> bonus olasiz! 🎁\n\n"
+        "📊 <b>Statistika:</b>\n"
+        "👥 Taklif qilingan: <b>{count}</b> ta\n"
+        "💰 Bonus balans: <b>{bonus} so'm</b>\n\n"
+        "🔗 Sizning havolangiz:\n"
+        "<code>{link}</code>"
+    ),
+    "referral.new_join": (
+        "🎉 <b>Yangi do'st qo'shildi!</b>\n\n"
+        "👤 {name} sizning havolangiz orqali qo'shildi!\n"
+        "👥 Jami taklif qilingan: {count} ta\n"
+        "💰 Bonus: +{bonus} so'm"
+    ),
+    "referral.share_btn": "📤 Do'stlarga ulashish",
+    "referral.copy_link": "📋 Havolani nusxalash uchun pastga qarang",
 }
