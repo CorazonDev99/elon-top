@@ -44,20 +44,10 @@ async def show_referral(message: Message, session: AsyncSession, lang: str = "uz
             "🎯 Oson Reklama — бот для размещения рекламы в Telegram! Подписывайтесь!"
         ),
     )
-    builder.button(
-        text=get_text("referral.copy_link", lang),
-        callback_data="noop",
-    )
     builder.adjust(1)
 
     await message.answer(
         text,
         reply_markup=builder.as_markup(),
-        parse_mode="HTML",
-    )
-
-    # Send the link separately so user can copy it
-    await message.answer(
-        f"🔗 <code>{invite_link}</code>",
         parse_mode="HTML",
     )
