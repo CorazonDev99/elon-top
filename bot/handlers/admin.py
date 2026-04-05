@@ -22,6 +22,20 @@ def is_admin(user_id: int) -> bool:
     return user_id in settings.admin_ids
 
 
+# ─── Admin Entry ───
+@router.message(F.text == "/admin")
+async def cmd_admin(message: Message, lang: str = "uz", **kwargs):
+    if not is_admin(message.from_user.id):
+        await message.answer(get_text("access_denied", lang), parse_mode="HTML")
+        return
+
+    await message.answer(
+        "🔐 <b>Admin panel</b>" if lang == "uz" else "🔐 <b>Админ-панель</b>",
+        reply_markup=admin_menu_kb(lang),
+        parse_mode="HTML",
+    )
+
+
 # ─── Stats ───
 @router.message(F.text.in_(["📊 Statistika", "📊 Статистика"]))
 async def show_stats(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
