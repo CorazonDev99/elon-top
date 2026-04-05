@@ -117,6 +117,26 @@ async def approve_channel(
         except Exception:
             pass
 
+    # Auto-post to bot channel
+    if channel and settings.bot_channel_id:
+        try:
+            subs = channel.subscribers_count or 0
+            cat = f"{channel.category.emoji} {channel.category.name_uz}" if channel.category else ""
+            await callback.bot.send_message(
+                chat_id=settings.bot_channel_id,
+                text=(
+                    f"🆕 <b>Yangi kanal qo'shildi!</b>\n\n"
+                    f"📺 <b>{channel.channel_title}</b>\n"
+                    f"👤 @{channel.channel_username}\n"
+                    f"👥 {subs:,} obunachi\n"
+                    f"📂 {cat}\n\n"
+                    f"📢 Reklama berish uchun @oson_reklama_uz_bot"
+                ),
+                parse_mode="HTML",
+            )
+        except Exception:
+            pass
+
     await callback.answer()
 
 

@@ -42,3 +42,10 @@ async def update_card_number(session: AsyncSession, telegram_id: int, card_numbe
     if user:
         user.card_number = card_number
         await session.commit()
+
+
+async def accept_terms(session: AsyncSession, telegram_id: int):
+    user = await get_user(session, telegram_id)
+    if user:
+        user.terms_accepted = True
+        await session.commit()

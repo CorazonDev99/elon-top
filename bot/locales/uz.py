@@ -21,6 +21,8 @@ TEXTS = {
     "menu.settings": "⚙️ Sozlamalar",
     "menu.about": "ℹ️ Bot haqida",
     "menu.referral": "👥 Do'stlarni taklif qilish",
+    "menu.bulk_order": "📦 Paket buyurtma",
+    "menu.subscriptions": "🔄 Obunalar",
     "menu.language": "🌐 Tilni o'zgartirish",
     "menu.back": "⬅️ Orqaga",
     "menu.home": "🏠 Bosh menyu",
@@ -356,4 +358,32 @@ TEXTS = {
     ),
     "referral.share_btn": "📤 Do'stlarga ulashish",
     "referral.copy_link": "📋 Havolani nusxalash uchun pastga qarang",
+
+    # ─── Bulk Orders ───
+    "bulk.select_channels": (
+        "📦 <b>Paket buyurtma</b>\n\n"
+        "Kanallarni tanlang (2+ ta = 15% chegirma!)\n"
+        "✅ belgilanganlar tanlanganlar:"
+    ),
+    "bulk.summary": (
+        "📦 <b>Paket buyurtma xulosasi</b>\n\n"
+        "📺 Kanallar ({count} ta):\n{channels}\n\n"
+        "💰 Jami: <s>{total} so'm</s>\n"
+        "🏷 Chegirma (15%): -{discount} so'm\n"
+        "✅ <b>Yakuniy: {final} so'm</b>"
+    ),
+
+    # ─── Subscriptions ───
+    "sub.empty": "🔄 Hozircha obunalaringiz yo'q.",
+    "sub.title": "🔄 <b>Sizning obunalaringiz:</b>",
+    "sub.select_frequency": (
+        "📅 <b>Obuna chastotasini tanlang:</b>\n\n"
+        "Reklama avtomatik ravishda joylashtiriladi."
+    ),
+    "sub.created": (
+        "✅ <b>Obuna yaratildi!</b>\n\n"
+        "📅 Chastota: {frequency}\n"
+        "💰 Har bir post: {price} so'm\n\n"
+        "Reklama avtomatik joylashtiriladi."
+    ),
 }

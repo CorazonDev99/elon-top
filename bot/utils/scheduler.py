@@ -242,6 +242,213 @@ async def remind_unpublished(bot):
                 logger.error(f"Failed to send publish reminder for order #{order.id}: {e}")
 
 
+async def guarantee_auto_refund(bot):
+    """Auto-cancel orders paid > 48h ago but not published. Notify both sides."""
+    logger.info("🛡 Checking guarantee (48h auto-refund)...")
+
+    async with async_session() as session:
+        from bot.database.models import Order
+        from sqlalchemy import select
+
+        cutoff = datetime.utcnow() - timedelta(hours=settings.guarantee_hours)
+
+        result = await session.execute(
+            select(Order)
+            .where(
+                Order.status == "paid",
+                Order.updated_at < cutoff,
+            )
+        )
+        overdue_orders = list(result.scalars().all())
+
+        for order in overdue_orders:
+            try:
+                order.status = "cancelled"
+                await session.commit()
+
+                # Notify advertiser
+                try:
+                    await bot.send_message(
+                        chat_id=order.advertiser_telegram_id,
+                        text=(
+                            f"🛡 <b>Garantiya ishladi!</b>\n\n"
+                            f"Buyurtma #{order.id} — reklama {settings.guarantee_hours} soat ichida "
+                            f"joylashtirilmadi.\n"
+                            f"To'lov qaytariladi. Admin bilan bog'laning."
+                        ),
+                        parse_mode="HTML",
+                    )
+                except Exception:
+                    pass
+
+                # Notify channel owner
+                if order.channel and order.channel.owner:
+                    try:
+                        await bot.send_message(
+                            chat_id=order.channel.owner.telegram_id,
+                            text=(
+                                f"⚠️ <b>Buyurtma #{order.id} bekor qilindi!</b>\n\n"
+                                f"Reklama {settings.guarantee_hours} soat ichida joylashtirilmadi.\n"
+                                f"To'lov reklama beruvchiga qaytariladi."
+                            ),
+                            parse_mode="HTML",
+                        )
+                    except Exception:
+                        pass
+
+                # Notify admin
+                for admin_id in settings.admin_ids:
+                    try:
+                        await bot.send_message(
+                            chat_id=admin_id,
+                            text=(
+                                f"🛡 Guarantee refund\n\n"
+                                f"Order #{order.id}\n"
+                                f"Amount: {format_price(order.price)} UZS\n"
+                                f"Reason: Not published in {settings.guarantee_hours}h"
+                            ),
+                        )
+                    except Exception:
+                        pass
+
+                logger.info(f"Guarantee refund for order #{order.id}")
+
+            except Exception as e:
+                logger.error(f"Guarantee error for order #{order.id}: {e}")
+
+
+async def send_top10_weekly(bot):
+    """Send weekly TOP-10 channels broadcast every Monday."""
+    today = date.today()
+    if today.weekday() != 0:  # 0 = Monday
+        return
+
+    logger.info("🏅 Sending weekly TOP-10 broadcast...")
+
+    async with async_session() as session:
+        from bot.database.models import Channel
+        from sqlalchemy import select
+
+        result = await session.execute(
+            select(Channel)
+            .where(Channel.is_active == True, Channel.is_verified == True)
+            .order_by(Channel.avg_rating.desc(), Channel.subscribers_count.desc())
+            .limit(10)
+        )
+        top_channels = list(result.scalars().all())
+
+        if not top_channels:
+            return
+
+        # Build UZ text
+        text_uz = "🏅 <b>Haftalik TOP-10 kanallar!</b>\n━━━━━━━━━━━━━━━━━━━━\n\n"
+        text_ru = "🏅 <b>Еженедельный ТОП-10 каналов!</b>\n━━━━━━━━━━━━━━━━━━━━\n\n"
+
+        for i, ch in enumerate(top_channels, 1):
+            medal = {1: "🥇", 2: "🥈", 3: "🥉"}.get(i, f"{i}.")
+            stars = f"⭐{ch.avg_rating}" if ch.avg_rating > 0 else ""
+            subs = f"👥 {ch.subscribers_count:,}" if ch.subscribers_count else ""
+            line = f"{medal} <b>{ch.channel_title}</b> @{ch.channel_username}\n     {subs} {stars}\n\n"
+            text_uz += line
+            text_ru += line
+
+        text_uz += "📢 Reklama berish uchun botga yozing!"
+        text_ru += "📢 Для размещения рекламы пишите боту!"
+
+        # Send to all users
+        users = await user_repo.get_all_users(session)
+        sent = 0
+        for user in users:
+            try:
+                text = text_uz if user.language == "uz" else text_ru
+                await bot.send_message(chat_id=user.telegram_id, text=text, parse_mode="HTML")
+                sent += 1
+            except Exception:
+                pass
+
+        logger.info(f"🏅 TOP-10 sent to {sent} users")
+
+        # Also post to bot channel
+        if settings.bot_channel_id:
+            try:
+                await bot.send_message(
+                    chat_id=settings.bot_channel_id,
+                    text=text_uz,
+                    parse_mode="HTML",
+                )
+            except Exception as e:
+                logger.error(f"Failed to post TOP-10 to channel: {e}")
+
+
+async def process_subscriptions(bot):
+    """Process due subscriptions — auto-create orders."""
+    logger.info("🔄 Processing subscriptions...")
+
+    async with async_session() as session:
+        from bot.database.repositories import subscription_repo, order_repo
+
+        due_subs = await subscription_repo.get_due_subscriptions(session)
+
+        for sub in due_subs:
+            try:
+                # Create order from subscription
+                order = await order_repo.create_order(
+                    session,
+                    advertiser_tid=sub.advertiser_telegram_id,
+                    channel_id=sub.channel_id,
+                    ad_format_id=sub.ad_format_id,
+                    price=sub.price_per_post,
+                    ad_text=sub.ad_text,
+                    ad_media_file_id=sub.ad_media_file_id,
+                    ad_media_type=sub.ad_media_type,
+                    desired_date=date.today(),
+                )
+
+                # Advance next date
+                await subscription_repo.advance_subscription(session, sub.id)
+
+                # Notify advertiser
+                adv_lang = sub.advertiser.language if sub.advertiser else "uz"
+                ch_name = sub.channel.channel_title if sub.channel else "?"
+                try:
+                    await bot.send_message(
+                        chat_id=sub.advertiser_telegram_id,
+                        text=(
+                            f"🔄 <b>Obuna buyurtmasi yaratildi!</b>\n\n"
+                            f"📺 {ch_name}\n"
+                            f"💰 {format_price(sub.price_per_post)} so'm\n"
+                            f"📋 Buyurtma #{order.id}"
+                        ) if adv_lang == "uz" else (
+                            f"🔄 <b>Заказ по подписке создан!</b>\n\n"
+                            f"📺 {ch_name}\n"
+                            f"💰 {format_price(sub.price_per_post)} сум\n"
+                            f"📋 Заказ #{order.id}"
+                        ),
+                        parse_mode="HTML",
+                    )
+                except Exception:
+                    pass
+
+                logger.info(f"Subscription #{sub.id} → Order #{order.id}")
+
+            except Exception as e:
+                logger.error(f"Subscription #{sub.id} error: {e}")
+
+
+async def post_to_bot_channel(bot, text: str):
+    """Helper: post a message to the bot's announcement channel."""
+    if not settings.bot_channel_id:
+        return
+    try:
+        await bot.send_message(
+            chat_id=settings.bot_channel_id,
+            text=text,
+            parse_mode="HTML",
+        )
+    except Exception as e:
+        logger.error(f"Failed to post to bot channel: {e}")
+
+
 async def scheduler_loop(bot):
     """Main scheduler loop — runs once daily at ~10:00 UTC+5."""
     logger.info("⏰ Scheduler started")
@@ -266,6 +473,9 @@ async def scheduler_loop(bot):
             await send_commission_reminders(bot)
             await auto_deactivate_overdue(bot)
             await remind_unpublished(bot)
+            await guarantee_auto_refund(bot)
+            await send_top10_weekly(bot)
+            await process_subscriptions(bot)
             logger.info("⏰ Scheduled tasks completed")
 
         except asyncio.CancelledError:

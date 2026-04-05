@@ -33,6 +33,7 @@ class User(Base):
     referred_by = Column(BigInteger, nullable=True)  # telegram_id of referrer
     referral_count = Column(Integer, default=0)  # how many users invited
     referral_bonus = Column(Integer, default=0)  # bonus balance in UZS
+    terms_accepted = Column(Boolean, default=False)  # accepted terms of service
     created_at = Column(DateTime, default=func.now())
 
     channels = relationship("Channel", back_populates="owner")
@@ -222,3 +223,30 @@ class PromoCode(Base):
 
     def __repr__(self):
         return f"<PromoCode {self.code}>"
+
+
+class Subscription(Base):
+    __tablename__ = "subscriptions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    advertiser_telegram_id = Column(
+        BigInteger, ForeignKey("users.telegram_id"), nullable=False
+    )
+    channel_id = Column(Integer, ForeignKey("channels.id"), nullable=False)
+    ad_format_id = Column(Integer, ForeignKey("ad_formats.id"), nullable=False)
+    ad_text = Column(Text, nullable=True)
+    ad_media_file_id = Column(String(255), nullable=True)
+    ad_media_type = Column(String(20), nullable=True)
+    price_per_post = Column(Integer, nullable=False)
+    frequency = Column(String(20), default="weekly")  # weekly, biweekly, monthly
+    is_active = Column(Boolean, default=True)
+    next_post_date = Column(Date, nullable=True)
+    total_posts = Column(Integer, default=0)  # how many times posted
+    created_at = Column(DateTime, default=func.now())
+
+    advertiser = relationship("User")
+    channel = relationship("Channel")
+    ad_format = relationship("AdFormat")
+
+    def __repr__(self):
+        return f"<Subscription #{self.id} ch={self.channel_id} active={self.is_active}>"

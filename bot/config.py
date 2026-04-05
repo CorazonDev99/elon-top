@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     admin_card_number: str = ""
     database_url: str
     redis_url: str = "redis://localhost:6379/0"
+    bot_channel_id: int = 0  # Telegram channel ID for auto-posting news
+    guarantee_hours: int = 48  # Auto-refund after N hours if not published
 
     model_config = {
         "env_file": ".env",

@@ -116,6 +116,11 @@ async def order_detail(
                 text="⭐ Baholash",
                 callback_data=f"rate_prompt:{order.id}",
             )
+        # Subscribe button
+        builder.button(
+            text="🔄 Obuna bo'lish" if lang == "uz" else "🔄 Подписаться",
+            callback_data=f"sub:create:{order.id}",
+        )
     builder.button(text=get_text("menu.back", lang), callback_data="my_order:back")
     builder.adjust(1)
 
