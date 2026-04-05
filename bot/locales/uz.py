@@ -6,7 +6,7 @@ TEXTS = {
         "🎯 <b>OSON REKLAMA</b>\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         "🇺🇿 O'zbekiston bo'ylab <b>1000+</b> Telegram\n"
-        "kanallarda reklama joylashtiring!\n\n"
+        "kanallarda va guruhlarda reklama joylashtiring!\n\n"
         "✅ Viloyat va tuman bo'yicha qidiruv\n"
         "✅ Qulay narxlar — <b>10,000 so'mdan</b>\n"
         "✅ Tez va ishonchli xizmat\n"
@@ -17,7 +17,7 @@ TEXTS = {
     "menu.browse": "📢 Reklama joylashtirish",
     "menu.search": "🔍 Qidirish",
     "menu.my_orders": "📋 Mening buyurtmalarim",
-    "menu.my_channels": "📺 Mening kanallarim",
+    "menu.my_channels": "📺 Kanal/Guruhlarim",
     "menu.settings": "⚙️ Sozlamalar",
     "menu.about": "ℹ️ Bot haqida",
     "menu.referral": "👥 Do'stlarni taklif qilish",
@@ -36,8 +36,8 @@ TEXTS = {
     "browse.select_region": "🗺 <b>Viloyatni tanlang:</b>",
     "browse.select_district": "📍 <b>{region} — Tumanni tanlang:</b>",
     "browse.select_category": "📂 <b>Kategoriyani tanlang:</b>",
-    "browse.no_channels": "😔 Hozircha bu yerda kanallar yo'q.\n\nTez orada qo'shiladi!",
-    "browse.channels_list": "📺 <b>{district} kanallari:</b>\n\nJami: {count} ta kanal",
+    "browse.no_channels": "😔 Hozircha bu yerda kanallar/guruhlar yo'q.\n\nTez orada qo'shiladi!",
+    "browse.channels_list": "📺 <b>{district} kanallari/guruhlari:</b>\n\nJami: {count} ta",
     "browse.all_categories": "📂 Barcha kategoriyalar",
 
     # ─── Channel Card ───
@@ -134,22 +134,22 @@ TEXTS = {
     "payment.rejected": "❌ To'lov rad etildi. Iltimos, admin bilan bog'laning.",
 
     # ─── Channel Owner ───
-    "owner.panel": "📺 <b>Mening kanallarim:</b>",
+    "owner.panel": "📺 <b>Mening kanal/guruhlarim:</b>",
     "owner.no_channels": (
-        "📭 Sizda hali kanallar yo'q.\n\n"
+        "📭 Sizda hali kanal/guruhlar yo'q.\n\n"
         "Kanalingizni qo'shing va reklama buyurtmalarini qabul qiling!"
     ),
-    "owner.add_channel": "➕ Kanal qo'shish",
+    "owner.add_channel": "➕ Kanal/Guruh qo'shish",
     "owner.enter_username": (
-        "📝 <b>Kanal username kiriting:</b>\n\n"
-        "Masalan: <code>@my_channel</code>\n\n"
-        "⚠️ Bot kanal adminlari ro'yxatida bo'lishi kerak!"
+        "📝 <b>Kanal yoki guruh username kiriting:</b>\n\n"
+        "Masalan: <code>@my_channel</code> yoki <code>@my_group</code>\n\n"
+        "⚠️ Bot kanal/guruh adminlari ro'yxatida bo'lishi kerak!"
     ),
-    "owner.select_region": "📍 <b>Kanal joylashgan viloyatni tanlang:</b>",
+    "owner.select_region": "📍 <b>Kanal/guruh joylashgan viloyatni tanlang:</b>",
     "owner.select_district": "📍 <b>Tumanni tanlang:</b>",
-    "owner.select_category": "📂 <b>Kanal kategoriyasini tanlang:</b>",
+    "owner.select_category": "📂 <b>Kategoriyani tanlang:</b>",
     "owner.enter_subscribers": (
-        "👥 <b>Obunachlar sonini kiriting:</b>\n\n"
+        "👥 <b>A'zolar/obunachlar sonini kiriting:</b>\n\n"
         "Masalan: <code>5000</code>"
     ),
     "owner.enter_views": (

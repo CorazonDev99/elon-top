@@ -17,7 +17,7 @@ TEXTS = {
     "menu.browse": "📢 Разместить рекламу",
     "menu.search": "🔍 Поиск",
     "menu.my_orders": "📋 Мои заказы",
-    "menu.my_channels": "📺 Мои каналы",
+    "menu.my_channels": "📺 Каналы/Группы",
     "menu.settings": "⚙️ Настройки",
     "menu.about": "ℹ️ О боте",
     "menu.referral": "👥 Пригласить друзей",
@@ -36,8 +36,8 @@ TEXTS = {
     "browse.select_region": "🗺 <b>Выберите область:</b>",
     "browse.select_district": "📍 <b>{region} — Выберите район:</b>",
     "browse.select_category": "📂 <b>Выберите категорию:</b>",
-    "browse.no_channels": "😔 Пока здесь нет каналов.\n\nСкоро появятся!",
-    "browse.channels_list": "📺 <b>Каналы: {district}</b>\n\nВсего: {count}",
+    "browse.no_channels": "😔 Пока здесь нет каналов/групп.\n\nСкоро появятся!",
+    "browse.channels_list": "📺 <b>Каналы/группы: {district}</b>\n\nВсего: {count}",
     "browse.all_categories": "📂 Все категории",
 
     # ─── Channel Card ───
@@ -134,22 +134,22 @@ TEXTS = {
     "payment.rejected": "❌ Оплата отклонена. Свяжитесь с админом.",
 
     # ─── Channel Owner ───
-    "owner.panel": "📺 <b>Мои каналы:</b>",
+    "owner.panel": "📺 <b>Мои каналы/группы:</b>",
     "owner.no_channels": (
-        "📭 У вас пока нет каналов.\n\n"
-        "Добавьте канал и начните принимать заказы на рекламу!"
+        "📭 У вас пока нет каналов/групп.\n\n"
+        "Добавьте канал или группу и начните принимать заказы!"
     ),
-    "owner.add_channel": "➕ Добавить канал",
+    "owner.add_channel": "➕ Добавить канал/группу",
     "owner.enter_username": (
-        "📝 <b>Введите username канала:</b>\n\n"
-        "Например: <code>@my_channel</code>\n\n"
-        "⚠️ Бот должен быть администратором канала!"
+        "📝 <b>Введите username канала или группы:</b>\n\n"
+        "Например: <code>@my_channel</code> или <code>@my_group</code>\n\n"
+        "⚠️ Бот должен быть администратором канала/группы!"
     ),
-    "owner.select_region": "📍 <b>Выберите область канала:</b>",
+    "owner.select_region": "📍 <b>Выберите область:</b>",
     "owner.select_district": "📍 <b>Выберите район:</b>",
-    "owner.select_category": "📂 <b>Выберите категорию канала:</b>",
+    "owner.select_category": "📂 <b>Выберите категорию:</b>",
     "owner.enter_subscribers": (
-        "👥 <b>Введите количество подписчиков:</b>\n\n"
+        "👥 <b>Введите кол-во участников/подписчиков:</b>\n\n"
         "Например: <code>5000</code>"
     ),
     "owner.enter_views": (
