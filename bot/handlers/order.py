@@ -79,12 +79,12 @@ async def select_format(
     )
     await state.set_state(OrderStates.send_ad_content)
 
-    await callback.message.edit_text(
-        get_text("order.send_text", lang),
-        parse_mode="HTML",
-    )
+    try:
+        await callback.message.delete()
+    except Exception:
+        pass
     await callback.message.answer(
-        get_text("menu.cancel", lang),
+        get_text("order.send_text", lang),
         reply_markup=cancel_kb(lang),
         parse_mode="HTML",
     )
