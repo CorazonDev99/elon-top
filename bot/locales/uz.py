@@ -279,7 +279,7 @@ TEXTS = {
         "reklama joylashtirish xizmati.\n\n"
         "🤖 Bot: @oson_reklama_uz_bot\n"
         "📞 Aloqa: @C_Rosinant\n\n"
-        "© 2025 Oson Reklama"
+        "© 2026 Oson Reklama"
     ),
 
     # ─── Common ───

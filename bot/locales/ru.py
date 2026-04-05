@@ -279,7 +279,7 @@ TEXTS = {
         "Telegram-каналах по всему Узбекистану.\n\n"
         "🤖 Бот: @oson_reklama_uz_bot\n"
         "📞 Контакт: @C_Rosinant\n\n"
-        "© 2025 Oson Reklama"
+        "© 2026 Oson Reklama"
     ),
 
     # ─── Common ───
