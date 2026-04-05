@@ -191,6 +191,11 @@ TEXTS = {
     "owner.channel_deleted": "✅ Канал удалён.",
     "owner.channel_activated": "✅ Канал активирован.",
     "owner.channel_deactivated": "⏸ Канал приостановлен.",
+    "owner.income_stats": (
+        "💰 <b>Доход за сегодня:</b> {daily} сум\n"
+        "📊 <b>Месячный доход:</b> {monthly} сум\n"
+        "📋 <b>Комиссия (5%):</b> {commission} сум"
+    ),
 
     # ─── Admin ───
     "admin.panel": (

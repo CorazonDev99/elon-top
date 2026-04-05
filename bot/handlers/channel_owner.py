@@ -71,11 +71,12 @@ async def show_my_channels(message: Message, lang: str = "uz", **kwargs):
     daily_income = daily_result.scalar() or 0
 
     text = get_text("owner.panel", lang) + "\n\n"
-    text += (
-        f"💰 <b>Bugungi daromad:</b> {format_price(daily_income)} so'm\n"
-        f"📊 <b>Oylik daromad:</b> {format_price(monthly_income)} so'm\n"
-        f"📋 <b>Komissiya (5%):</b> {format_price(commission_amount)} so'm\n\n"
-    )
+    text += get_text(
+        "owner.income_stats", lang,
+        daily=format_price(daily_income),
+        monthly=format_price(monthly_income),
+        commission=format_price(commission_amount),
+    ) + "\n\n"
 
     from aiogram.utils.keyboard import InlineKeyboardBuilder
 

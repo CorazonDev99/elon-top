@@ -110,12 +110,3 @@ async def home(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
         parse_mode="HTML",
     )
 
-
-@router.message(F.text.in_(["❌ Bekor qilish", "❌ Отмена"]))
-async def cancel(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
-    await state.clear()
-    await message.answer(
-        get_text("cancelled", lang),
-        reply_markup=main_menu_kb(lang),
-        parse_mode="HTML",
-    )

@@ -84,7 +84,7 @@ async def select_format(
         parse_mode="HTML",
     )
     await callback.message.answer(
-        get_text("order.send_text", lang),
+        get_text("menu.cancel", lang),
         reply_markup=cancel_kb(lang),
         parse_mode="HTML",
     )

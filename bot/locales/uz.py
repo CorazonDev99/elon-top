@@ -191,6 +191,11 @@ TEXTS = {
     "owner.channel_deleted": "✅ Kanal o'chirildi.",
     "owner.channel_activated": "✅ Kanal aktivlashtirildi.",
     "owner.channel_deactivated": "⏸ Kanal to'xtatildi.",
+    "owner.income_stats": (
+        "💰 <b>Bugungi daromad:</b> {daily} so'm\n"
+        "📊 <b>Oylik daromad:</b> {monthly} so'm\n"
+        "📋 <b>Komissiya (5%):</b> {commission} so'm"
+    ),
 
     # ─── Admin ───
     "admin.panel": (

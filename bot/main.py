@@ -25,6 +25,7 @@ from bot.middlewares.throttling import ThrottlingMiddleware
 
 # Handlers (routers)
 from bot.handlers.start import router as start_router
+from bot.handlers.cancel import router as cancel_router
 from bot.handlers.browse import router as browse_router
 from bot.handlers.order import router as order_router
 from bot.handlers.my_orders import router as my_orders_router
@@ -65,8 +66,9 @@ async def main():
     dp.update.middleware(DbSessionMiddleware())
     dp.update.middleware(UserRegisterMiddleware())
 
-    # Register routers (order matters: more specific first)
-    dp.include_router(channel_owner_router)  # Has FSM states that overlap with browse
+    # Register routers (order matters!)
+    dp.include_router(cancel_router)  # Global cancel — MUST be first!
+    dp.include_router(channel_owner_router)
     dp.include_router(order_router)
     dp.include_router(admin_router)
     dp.include_router(browse_router)
