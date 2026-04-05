@@ -73,11 +73,17 @@ async def main():
     dp.include_router(my_orders_router)
     dp.include_router(start_router)  # Most generic — last
 
+    # Start scheduler (commission reminders + auto-deactivation)
+    from bot.utils.scheduler import scheduler_loop
+
+    scheduler_task = asyncio.create_task(scheduler_loop(bot))
+
     # Start polling
     logger.info("✅ Bot is ready! Starting polling...")
     try:
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
     finally:
+        scheduler_task.cancel()
         await bot.session.close()
         await engine.dispose()
         await redis.close()

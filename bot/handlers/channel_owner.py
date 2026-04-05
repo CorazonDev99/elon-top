@@ -44,7 +44,39 @@ async def show_my_channels(message: Message, lang: str = "uz", **kwargs):
         )
         return
 
+    # Calculate income stats
+    from datetime import datetime, timedelta
+    from bot.database.repositories import commission_repo
+
+    now = datetime.utcnow()
+    monthly_income = await commission_repo.calculate_owner_monthly_income(
+        session, message.from_user.id, now.year, now.month
+    )
+    commission_amount = int(monthly_income * 0.05)
+
+    # Daily income (orders completed today)
+    from sqlalchemy import select, func
+    from bot.database.models import Order, Channel as ChannelModel
+
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    daily_result = await session.execute(
+        select(func.coalesce(func.sum(Order.price), 0))
+        .join(ChannelModel, Order.channel_id == ChannelModel.id)
+        .where(
+            ChannelModel.owner_telegram_id == message.from_user.id,
+            Order.status.in_(["paid", "published", "completed"]),
+            Order.updated_at >= today_start,
+        )
+    )
+    daily_income = daily_result.scalar() or 0
+
     text = get_text("owner.panel", lang) + "\n\n"
+    text += (
+        f"💰 <b>Bugungi daromad:</b> {format_price(daily_income)} so'm\n"
+        f"📊 <b>Oylik daromad:</b> {format_price(monthly_income)} so'm\n"
+        f"📋 <b>Komissiya (5%):</b> {format_price(commission_amount)} so'm\n\n"
+    )
+
     from aiogram.utils.keyboard import InlineKeyboardBuilder
 
     builder = InlineKeyboardBuilder()
