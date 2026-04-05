@@ -66,5 +66,9 @@ def owner_published_kb(order_id: int, lang: str = "uz") -> InlineKeyboardMarkup:
         text=get_text("owner.mark_published", lang),
         callback_data=f"owner_order:published:{order_id}",
     )
+    builder.button(
+        text=get_text("report.btn", lang),
+        callback_data=f"report:start:{order_id}",
+    )
     builder.adjust(1)
     return builder.as_markup()

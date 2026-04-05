@@ -15,6 +15,7 @@ TEXTS = {
     ),
     "menu.main": "🏠 <b>Bosh menyu</b>\n\nQuyidagilardan birini tanlang:",
     "menu.browse": "📢 Reklama joylashtirish",
+    "menu.search": "🔍 Qidirish",
     "menu.my_orders": "📋 Mening buyurtmalarim",
     "menu.my_channels": "📺 Mening kanallarim",
     "menu.settings": "⚙️ Sozlamalar",
@@ -44,6 +45,7 @@ TEXTS = {
         "├ 📂 {category}\n"
         "├ 👥 <b>{subscribers}</b> obunachi\n"
         "├ 👁 ~<b>{views}</b> ko'rish\n"
+        "├ ⭐ Reyting: {rating}\n"
         "└ {verified}\n\n"
         "💰 <b>Narxlar:</b>\n{pricing}"
     ),
@@ -51,6 +53,7 @@ TEXTS = {
     "channel.not_verified": "⏳ Moderatsiyada",
     "channel.price_line": "  • {format}: <b>{price} so'm</b>\n",
     "channel.order_btn": "🛒 Reklama buyurtma berish",
+    "channel.similar": "📺 O'xshash kanallar",
 
     # ─── Order ───
     "order.select_format": "📝 <b>Reklama formatini tanlang:</b>\n\n{formats}",
@@ -288,4 +291,47 @@ TEXTS = {
     "next_page": "▶️",
     "loading": "⏳ Yuklanmoqda...",
     "access_denied": "🚫 Sizda ruxsat yo'q.",
+
+    # ─── Search ───
+    "search.enter_query": (
+        "🔍 <b>Qidiruv</b>\n\n"
+        "Kanal nomi yoki username kiriting:"
+    ),
+    "search.too_short": "⚠️ Kamida 2 ta belgi kiriting.",
+    "search.no_results": "😔 Hech narsa topilmadi. Boshqa so'z bilan urinib ko'ring.",
+    "search.results": "🔍 <b>\"{query}\"</b> bo'yicha {count} ta natija:",
+
+    # ─── Rating ───
+    "rating.request": (
+        "⭐ <b>Kanalni baholang!</b>\n\n"
+        "📺 {channel}\n\n"
+        "Qanday baholaysiz?"
+    ),
+
+    # ─── Post Report ───
+    "report.enter_views": "👁 Reklama postining ko'rishlar sonini kiriting:",
+    "report.enter_reach": "📊 Reklama postining qamrovini (reach) kiriting:",
+    "report.saved": (
+        "✅ <b>Hisobot saqlandi!</b>\n\n"
+        "👁 Ko'rishlar: {views}\n"
+        "📊 Qamrov: {reach}"
+    ),
+    "report.btn": "📊 Hisobot yuborish",
+
+    # ─── Promo ───
+    "promo.enter_code": "🏷 Promokod bo'lsa, kiriting (yoki o'tkazish uchun davom eting):",
+    "promo.applied": "✅ Promokod qo'llanildi! Chegirma: {discount} so'm",
+    "promo.invalid": "⚠️ Noto'g'ri yoki muddati o'tgan promokod.",
+    "promo.btn": "🏷 Promokod kiritish",
+
+    # ─── Repeat ───
+    "order.repeat": "🔄 Qayta buyurtma",
+
+    # ─── Advertiser Stats ───
+    "my_orders.stats": (
+        "📊 <b>Sizning statistikangiz:</b>\n\n"
+        "📋 Jami buyurtmalar: <b>{total_orders}</b>\n"
+        "✅ Yakunlangan: <b>{completed}</b>\n"
+        "💰 Jami sarflangan: <b>{total_spent} so'm</b>"
+    ),
 }

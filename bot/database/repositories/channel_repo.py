@@ -194,3 +194,60 @@ async def count_channels(session: AsyncSession) -> dict:
         "verified": verified.scalar() or 0,
         "pending": pending.scalar() or 0,
     }
+
+
+# ─── Search ───
+async def search_channels(session: AsyncSession, query: str) -> list[Channel]:
+    """Search channels by title or username."""
+    pattern = f"%{query}%"
+    result = await session.execute(
+        select(Channel)
+        .where(
+            Channel.is_verified == True,
+            Channel.is_active == True,
+            (Channel.channel_title.ilike(pattern) | Channel.channel_username.ilike(pattern)),
+        )
+        .options(
+            selectinload(Channel.district),
+            selectinload(Channel.category),
+            selectinload(Channel.pricing).selectinload(ChannelPricing.ad_format),
+        )
+        .order_by(Channel.avg_rating.desc(), Channel.subscribers_count.desc())
+        .limit(20)
+    )
+    return list(result.scalars().all())
+
+
+# ─── Recommendations (similar channels) ───
+async def get_similar_channels(
+    session: AsyncSession, channel_id: int, limit: int = 5
+) -> list[Channel]:
+    """Get channels in the same category or district."""
+    channel = await session.get(Channel, channel_id)
+    if not channel:
+        return []
+
+    result = await session.execute(
+        select(Channel)
+        .where(
+            Channel.id != channel_id,
+            Channel.is_verified == True,
+            Channel.is_active == True,
+            (Channel.category_id == channel.category_id) | (Channel.district_id == channel.district_id),
+        )
+        .options(
+            selectinload(Channel.district),
+            selectinload(Channel.category),
+        )
+        .order_by(Channel.avg_rating.desc(), Channel.subscribers_count.desc())
+        .limit(limit)
+    )
+    return list(result.scalars().all())
+
+
+# ─── Auto-update subscribers via Telegram API ───
+async def update_channel_stats(session: AsyncSession, channel_id: int, members: int):
+    channel = await session.get(Channel, channel_id)
+    if channel:
+        channel.subscribers_count = members
+        await session.commit()

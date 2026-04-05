@@ -199,6 +199,49 @@ async def auto_deactivate_overdue(bot):
                 logger.error(f"Failed to process deactivation for {owner_tid}: {e}")
 
 
+async def remind_unpublished(bot):
+    """Remind channel owners about orders paid > 24h ago but not yet published."""
+    logger.info("🔔 Checking for unpublished orders...")
+
+    async with async_session() as session:
+        from bot.database.repositories import order_repo
+
+        overdue = await order_repo.get_overdue_unpublished(session)
+
+        for order in overdue:
+            try:
+                if not order.channel or not order.channel.owner:
+                    continue
+
+                owner_tid = order.channel.owner.telegram_id
+                owner_lang = order.channel.owner.language or "uz"
+
+                if owner_lang == "ru":
+                    text = (
+                        f"🔔 <b>Напоминание!</b>\n\n"
+                        f"Заказ #{order.id} оплачен, но реклама ещё не опубликована.\n"
+                        f"Канал: @{order.channel.channel_username}\n\n"
+                        f"Пожалуйста, опубликуйте рекламу!"
+                    )
+                else:
+                    text = (
+                        f"🔔 <b>Eslatma!</b>\n\n"
+                        f"Buyurtma #{order.id} to'langan, lekin reklama hali chop etilmagan.\n"
+                        f"Kanal: @{order.channel.channel_username}\n\n"
+                        f"Iltimos, reklamani chop eting!"
+                    )
+
+                await bot.send_message(
+                    chat_id=owner_tid,
+                    text=text,
+                    parse_mode="HTML",
+                )
+                logger.info(f"Publish reminder sent for order #{order.id}")
+
+            except Exception as e:
+                logger.error(f"Failed to send publish reminder for order #{order.id}: {e}")
+
+
 async def scheduler_loop(bot):
     """Main scheduler loop — runs once daily at ~10:00 UTC+5."""
     logger.info("⏰ Scheduler started")
@@ -222,6 +265,7 @@ async def scheduler_loop(bot):
             logger.info("⏰ Running scheduled tasks...")
             await send_commission_reminders(bot)
             await auto_deactivate_overdue(bot)
+            await remind_unpublished(bot)
             logger.info("⏰ Scheduled tasks completed")
 
         except asyncio.CancelledError:

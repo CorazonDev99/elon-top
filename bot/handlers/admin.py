@@ -475,3 +475,35 @@ async def block_overdue(
         )
     await callback.answer()
 
+
+# ─── Promo codes (Admin) ───
+@router.message(F.text == "🏷 Promokodlar")
+async def show_promos(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
+    if not is_admin(message.from_user.id):
+        await message.answer(get_text("access_denied", lang), parse_mode="HTML")
+        return
+
+    from bot.database.repositories import promo_repo
+
+    promos = await promo_repo.get_all_promos(session)
+
+    if not promos:
+        text = "🏷 <b>Promokodlar yo'q.</b>\n\nYangi promokod yaratish uchun tugmani bosing."
+    else:
+        text = "🏷 <b>Promokodlar:</b>\n\n"
+        for p in promos:
+            status = "✅" if p.is_active else "❌"
+            desc = f"{p.discount_percent}%" if p.discount_percent > 0 else f"{format_price(p.discount_amount)} so'm"
+            uses = f"{p.used_count}/{p.max_uses}" if p.max_uses > 0 else f"{p.used_count}/♾"
+            text += (
+                f"{status} <code>{p.code}</code> — {desc}\n"
+                f"   Ishlatilgan: {uses}\n\n"
+            )
+
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+    builder = InlineKeyboardBuilder()
+    builder.button(text="➕ Yangi promokod", callback_data="admin:create_promo")
+    builder.adjust(1)
+
+    await message.answer(text, reply_markup=builder.as_markup(), parse_mode="HTML")

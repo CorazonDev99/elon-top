@@ -31,6 +31,8 @@ from bot.handlers.order import router as order_router
 from bot.handlers.my_orders import router as my_orders_router
 from bot.handlers.channel_owner import router as channel_owner_router
 from bot.handlers.admin import router as admin_router
+from bot.handlers.search import router as search_router
+from bot.handlers.extras import router as extras_router
 
 
 async def main():
@@ -68,6 +70,8 @@ async def main():
 
     # Register routers (order matters!)
     dp.include_router(cancel_router)  # Global cancel — MUST be first!
+    dp.include_router(search_router)  # Search
+    dp.include_router(extras_router)  # Rating, report, promo, repeat
     dp.include_router(channel_owner_router)
     dp.include_router(order_router)
     dp.include_router(admin_router)

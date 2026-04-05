@@ -19,6 +19,7 @@ def admin_menu_kb(lang: str = "uz") -> ReplyKeyboardMarkup:
                 KeyboardButton(text=get_text("admin.all_orders", lang)),
             ],
             [
+                KeyboardButton(text="🏷 Promokodlar"),
                 KeyboardButton(text=get_text("menu.home", lang)),
             ],
         ],

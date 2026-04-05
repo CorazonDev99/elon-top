@@ -126,14 +126,35 @@ async def channel_page(callback: CallbackQuery, session: AsyncSession, lang: str
 
 
 # ─── Channel detail ───
+@router.callback_query(F.data.startswith("ch:"))
+async def show_channel_short(callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs):
+    """Alias: ch:ID used from search results."""
+    channel_id = int(callback.data.split(":")[1])
+    await _show_channel_detail(callback, session, channel_id, lang)
+
+
 @router.callback_query(F.data.startswith("channel:"))
 async def show_channel(callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs):
     channel_id = int(callback.data.split(":")[1])
+    await _show_channel_detail(callback, session, channel_id, lang)
+
+
+async def _show_channel_detail(callback: CallbackQuery, session: AsyncSession, channel_id: int, lang: str):
     channel = await channel_repo.get_channel_full(session, channel_id)
 
     if not channel:
         await callback.answer("Channel not found", show_alert=True)
         return
+
+    # Auto-update subscriber count from Telegram
+    try:
+        chat = await callback.bot.get_chat(f"@{channel.channel_username}")
+        members = await callback.bot.get_chat_member_count(chat.id)
+        if members and members != channel.subscribers_count:
+            await channel_repo.update_channel_stats(session, channel_id, members)
+            channel.subscribers_count = members
+    except Exception:
+        pass
 
     # Build pricing text
     pricing_text = ""
@@ -153,6 +174,13 @@ async def show_channel(callback: CallbackQuery, session: AsyncSession, lang: str
     cat_name = channel.category.name_uz if lang == "uz" else channel.category.name_ru
     verified = get_text("channel.verified" if channel.is_verified else "channel.not_verified", lang)
 
+    # Star rating display
+    if channel.avg_rating > 0:
+        full_stars = int(channel.avg_rating)
+        rating_str = "⭐" * full_stars + f" {channel.avg_rating}/5 ({channel.rating_count})"
+    else:
+        rating_str = "—"
+
     text = get_text(
         "channel.card", lang,
         title=channel.channel_title,
@@ -164,11 +192,41 @@ async def show_channel(callback: CallbackQuery, session: AsyncSession, lang: str
         views=format_subscribers(channel.avg_views),
         verified=verified,
         pricing=pricing_text,
+        rating=rating_str,
     )
+
+    # Get recommendations
+    similar = await channel_repo.get_similar_channels(session, channel_id, limit=3)
+
+    kb = channel_detail_kb(channel, lang)
+
+    # Add recommendation buttons
+    if similar:
+        from aiogram.utils.keyboard import InlineKeyboardBuilder
+        builder = InlineKeyboardBuilder()
+        # Copy existing buttons from kb
+        for row in kb.inline_keyboard:
+            for btn in row:
+                builder.button(text=btn.text, callback_data=btn.callback_data)
+
+        builder.button(
+            text=f"━━ {get_text('channel.similar', lang)} ━━",
+            callback_data="noop",
+        )
+        for sim in similar:
+            stars = f"⭐{sim.avg_rating}" if sim.avg_rating > 0 else ""
+            builder.button(
+                text=f"📺 {sim.channel_title} {stars}",
+                callback_data=f"ch:{sim.id}",
+            )
+        builder.adjust(1)
+        reply_markup = builder.as_markup()
+    else:
+        reply_markup = kb
 
     await callback.message.edit_text(
         text,
-        reply_markup=channel_detail_kb(channel, lang),
+        reply_markup=reply_markup,
         parse_mode="HTML",
     )
     await callback.answer()

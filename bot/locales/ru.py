@@ -15,6 +15,7 @@ TEXTS = {
     ),
     "menu.main": "🏠 <b>Главное меню</b>\n\nВыберите действие:",
     "menu.browse": "📢 Разместить рекламу",
+    "menu.search": "🔍 Поиск",
     "menu.my_orders": "📋 Мои заказы",
     "menu.my_channels": "📺 Мои каналы",
     "menu.settings": "⚙️ Настройки",
@@ -44,6 +45,7 @@ TEXTS = {
         "├ 📂 {category}\n"
         "├ 👥 <b>{subscribers}</b> подписчиков\n"
         "├ 👁 ~<b>{views}</b> просмотров\n"
+        "├ ⭐ Рейтинг: {rating}\n"
         "└ {verified}\n\n"
         "💰 <b>Цены:</b>\n{pricing}"
     ),
@@ -51,6 +53,7 @@ TEXTS = {
     "channel.not_verified": "⏳ На модерации",
     "channel.price_line": "  • {format}: <b>{price} сум</b>\n",
     "channel.order_btn": "🛒 Заказать рекламу",
+    "channel.similar": "📺 Похожие каналы",
 
     # ─── Order ───
     "order.select_format": "📝 <b>Выберите формат рекламы:</b>\n\n{formats}",
@@ -288,4 +291,47 @@ TEXTS = {
     "next_page": "▶️",
     "loading": "⏳ Загрузка...",
     "access_denied": "🚫 Доступ запрещён.",
+
+    # ─── Search ───
+    "search.enter_query": (
+        "🔍 <b>Поиск</b>\n\n"
+        "Введите название канала или username:"
+    ),
+    "search.too_short": "⚠️ Введите минимум 2 символа.",
+    "search.no_results": "😔 Ничего не найдено. Попробуйте другой запрос.",
+    "search.results": "🔍 <b>\"{query}\"</b> — {count} результат(ов):",
+
+    # ─── Rating ───
+    "rating.request": (
+        "⭐ <b>Оцените канал!</b>\n\n"
+        "📺 {channel}\n\n"
+        "Как оцениваете?"
+    ),
+
+    # ─── Post Report ───
+    "report.enter_views": "👁 Введите кол-во просмотров рекламного поста:",
+    "report.enter_reach": "📊 Введите охват (reach) поста:",
+    "report.saved": (
+        "✅ <b>Отчёт сохранён!</b>\n\n"
+        "👁 Просмотры: {views}\n"
+        "📊 Охват: {reach}"
+    ),
+    "report.btn": "📊 Отправить отчёт",
+
+    # ─── Promo ───
+    "promo.enter_code": "🏷 Если есть промокод, введите (или пропустите):",
+    "promo.applied": "✅ Промокод применён! Скидка: {discount} сум",
+    "promo.invalid": "⚠️ Неверный или истёкший промокод.",
+    "promo.btn": "🏷 Ввести промокод",
+
+    # ─── Repeat ───
+    "order.repeat": "🔄 Повторить заказ",
+
+    # ─── Advertiser Stats ───
+    "my_orders.stats": (
+        "📊 <b>Ваша статистика:</b>\n\n"
+        "📋 Всего заказов: <b>{total_orders}</b>\n"
+        "✅ Завершенных: <b>{completed}</b>\n"
+        "💰 Всего потрачено: <b>{total_spent} сум</b>"
+    ),
 }

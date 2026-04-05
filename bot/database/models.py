@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     Date,
     DateTime,
+    Float,
     ForeignKey,
     Integer,
     String,
@@ -96,6 +97,8 @@ class Channel(Base):
     description = Column(Text, nullable=True)
     subscribers_count = Column(Integer, default=0)
     avg_views = Column(Integer, default=0)
+    avg_rating = Column(Float, default=0.0)  # 0-5
+    rating_count = Column(Integer, default=0)
     is_verified = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=func.now())
@@ -161,9 +164,14 @@ class Order(Base):
     #           pending -> rejected
     #           pending -> cancelled (by advertiser)
     price = Column(Integer, nullable=False)  # UZS
+    discount = Column(Integer, default=0)  # promo discount amount
+    promo_code = Column(String(50), nullable=True)
     desired_date = Column(Date, nullable=True)
     payment_screenshot_file_id = Column(String(255), nullable=True)
     rejection_reason = Column(Text, nullable=True)
+    rating = Column(Integer, nullable=True)  # 1-5 stars
+    post_views = Column(Integer, nullable=True)  # report: views after publish
+    post_reach = Column(Integer, nullable=True)  # report: reach after publish
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
@@ -194,3 +202,20 @@ class MonthlyCommission(Base):
 
     def __repr__(self):
         return f"<Commission {self.owner_telegram_id} {self.year}/{self.month} paid={self.is_paid}>"
+
+
+class PromoCode(Base):
+    __tablename__ = "promo_codes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String(50), unique=True, nullable=False, index=True)
+    discount_percent = Column(Integer, default=0)  # e.g. 10 = 10%
+    discount_amount = Column(Integer, default=0)  # fixed UZS discount
+    max_uses = Column(Integer, default=0)  # 0 = unlimited
+    used_count = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    expires_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=func.now())
+
+    def __repr__(self):
+        return f"<PromoCode {self.code}>"

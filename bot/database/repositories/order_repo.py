@@ -162,3 +162,86 @@ async def get_channel_pricing(
         )
     )
     return result.scalar_one_or_none()
+
+
+# ─── Rating ───
+async def rate_order(session: AsyncSession, order_id: int, rating: int):
+    """Rate completed order (1-5 stars) and update channel avg_rating."""
+    order = await session.get(Order, order_id)
+    if not order:
+        return
+
+    order.rating = rating
+    await session.commit()
+
+    # Recalculate channel average rating
+    result = await session.execute(
+        select(func.avg(Order.rating), func.count(Order.rating))
+        .where(Order.channel_id == order.channel_id, Order.rating.isnot(None))
+    )
+    row = result.one()
+    avg_rat = float(row[0] or 0)
+    count = int(row[1] or 0)
+
+    channel = await session.get(Channel, order.channel_id)
+    if channel:
+        channel.avg_rating = round(avg_rat, 1)
+        channel.rating_count = count
+        await session.commit()
+
+
+# ─── Post report ───
+async def save_post_report(
+    session: AsyncSession, order_id: int, views: int, reach: int
+):
+    order = await session.get(Order, order_id)
+    if order:
+        order.post_views = views
+        order.post_reach = reach
+        order.status = "completed"
+        order.updated_at = datetime.utcnow()
+        await session.commit()
+
+
+# ─── Advertiser stats ───
+async def get_advertiser_stats(session: AsyncSession, telegram_id: int) -> dict:
+    total_spent = await session.execute(
+        select(func.coalesce(func.sum(Order.price), 0))
+        .where(
+            Order.advertiser_telegram_id == telegram_id,
+            Order.status.in_(["paid", "published", "completed"]),
+        )
+    )
+    total_orders = await session.execute(
+        select(func.count(Order.id))
+        .where(Order.advertiser_telegram_id == telegram_id)
+    )
+    completed = await session.execute(
+        select(func.count(Order.id))
+        .where(
+            Order.advertiser_telegram_id == telegram_id,
+            Order.status.in_(["published", "completed"]),
+        )
+    )
+    return {
+        "total_spent": total_spent.scalar() or 0,
+        "total_orders": total_orders.scalar() or 0,
+        "completed": completed.scalar() or 0,
+    }
+
+
+# ─── Unpublished orders (accepted > 24h ago) ───
+async def get_overdue_unpublished(session: AsyncSession) -> list[Order]:
+    cutoff = datetime.utcnow() - timedelta(hours=24)
+    result = await session.execute(
+        select(Order)
+        .where(
+            Order.status == "paid",
+            Order.updated_at < cutoff,
+        )
+        .options(
+            selectinload(Order.channel).selectinload(Channel.owner),
+            selectinload(Order.advertiser),
+        )
+    )
+    return list(result.scalars().all())

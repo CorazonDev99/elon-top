@@ -27,8 +27,17 @@ async def show_my_orders(message: Message, lang: str = "uz", **kwargs):
         )
         return
 
-    text = get_text("my_orders.title", lang) + "\n\n"
-    for order in orders[:20]:  # limit to 20
+    # Show advertiser stats
+    stats = await order_repo.get_advertiser_stats(session, message.from_user.id)
+    text = get_text(
+        "my_orders.stats", lang,
+        total_orders=stats["total_orders"],
+        completed=stats["completed"],
+        total_spent=format_price(stats["total_spent"]),
+    ) + "\n\n"
+
+    text += get_text("my_orders.title", lang) + "\n\n"
+    for order in orders[:20]:
         fmt_name = order.ad_format.name_uz if lang == "uz" else order.ad_format.name_ru
         status = get_text(f"status.{order.status}", lang)
         text += get_text(
@@ -95,6 +104,18 @@ async def order_detail(
             text="💳 " + get_text("order.confirm", lang),
             callback_data=f"payment:send:{order.id}",
         )
+    elif order.status in ("published", "completed"):
+        # Repeat order button
+        builder.button(
+            text=get_text("order.repeat", lang),
+            callback_data=f"order:repeat:{order.id}",
+        )
+        # Rate button (if not rated yet)
+        if not order.rating:
+            builder.button(
+                text="⭐ Baholash",
+                callback_data=f"rate_prompt:{order.id}",
+            )
     builder.button(text=get_text("menu.back", lang), callback_data="my_order:back")
     builder.adjust(1)
 
