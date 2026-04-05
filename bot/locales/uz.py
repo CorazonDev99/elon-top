@@ -3,10 +3,15 @@
 TEXTS = {
     # ─── Start & Menu ───
     "welcome": (
-        "🎯 <b>Oson Reklama</b> botiga xush kelibsiz!\n\n"
-        "Biz sizga O'zbekiston bo'ylab Telegram kanallarda\n"
-        "reklama joylashtirish xizmatini taqdim etamiz.\n\n"
-        "📢 Reklama berish yoki kanalingizni ro'yxatdan o'tkazing!"
+        "🎯 <b>OSON REKLAMA</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "🇺🇿 O'zbekiston bo'ylab <b>1000+</b> Telegram\n"
+        "kanallarda reklama joylashtiring!\n\n"
+        "✅ Viloyat va tuman bo'yicha qidiruv\n"
+        "✅ Qulay narxlar — <b>10,000 so'mdan</b>\n"
+        "✅ Tez va ishonchli xizmat\n"
+        "✅ Kanal egalariga daromad\n\n"
+        "👇 <b>Boshlash uchun tanlang:</b>"
     ),
     "menu.main": "🏠 <b>Bosh menyu</b>\n\nQuyidagilardan birini tanlang:",
     "menu.browse": "📢 Reklama joylashtirish",

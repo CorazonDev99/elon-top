@@ -2,9 +2,11 @@
 /start handler — welcome message, main menu, language selection, settings, about.
 """
 
+import os
+
 from aiogram import Router, F
 from aiogram.filters import CommandStart
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,15 +19,64 @@ from bot.config import settings
 
 router = Router()
 
+# Cache the file_id after first upload
+_welcome_photo_file_id = None
+
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
+    global _welcome_photo_file_id
     await state.clear()
-    await message.answer(
-        get_text("welcome", lang),
-        reply_markup=main_menu_kb(lang),
-        parse_mode="HTML",
-    )
+
+    caption = get_text("welcome", lang)
+
+    try:
+        if _welcome_photo_file_id:
+            # Use cached file_id (faster)
+            await message.answer_photo(
+                photo=_welcome_photo_file_id,
+                caption=caption,
+                reply_markup=main_menu_kb(lang),
+                parse_mode="HTML",
+            )
+        else:
+            # First time — upload from file
+            banner_path = os.path.join(
+                os.path.dirname(os.path.dirname(__file__)),
+                "bot", "assets", "welcome_banner.png"
+            )
+            if not os.path.exists(banner_path):
+                # Fallback: try relative to project root
+                banner_path = os.path.join(
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                    "assets", "welcome_banner.png"
+                )
+
+            if os.path.exists(banner_path):
+                photo = FSInputFile(banner_path)
+                msg = await message.answer_photo(
+                    photo=photo,
+                    caption=caption,
+                    reply_markup=main_menu_kb(lang),
+                    parse_mode="HTML",
+                )
+                # Cache file_id for faster subsequent sends
+                if msg.photo:
+                    _welcome_photo_file_id = msg.photo[-1].file_id
+            else:
+                # No banner file — fallback to text
+                await message.answer(
+                    caption,
+                    reply_markup=main_menu_kb(lang),
+                    parse_mode="HTML",
+                )
+    except Exception:
+        # Any error — fallback to text
+        await message.answer(
+            caption,
+            reply_markup=main_menu_kb(lang),
+            parse_mode="HTML",
+        )
 
 
 @router.message(F.text.in_(["📢 Reklama joylashtirish", "📢 Разместить рекламу"]))
