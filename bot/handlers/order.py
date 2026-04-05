@@ -285,7 +285,7 @@ async def cancel_order(
     await callback.answer()
 
 
-# ─── Payment flow ───
+# ─── Payment flow — pays to channel owner's card ───
 @router.callback_query(F.data.startswith("payment:send:"))
 async def start_payment(
     callback: CallbackQuery,
@@ -301,6 +301,23 @@ async def start_payment(
         await callback.answer("Order not found", show_alert=True)
         return
 
+    # Get channel owner's card number
+    from bot.database.repositories import user_repo
+
+    owner = await user_repo.get_user(session, order.channel.owner_telegram_id)
+    owner_card = owner.card_number if owner else None
+
+    if not owner_card:
+        await callback.message.edit_text(
+            "⚠️ Kanal egasi karta raqamini hali kiritmagani.",
+            parse_mode="HTML",
+        )
+        await callback.answer()
+        return
+
+    # Format card nicely: 9860 3501 4981 1860
+    card_display = " ".join([owner_card[i:i+4] for i in range(0, len(owner_card), 4)])
+
     await state.set_state(PaymentStates.waiting_screenshot)
     await state.update_data(payment_order_id=order_id)
 
@@ -308,7 +325,7 @@ async def start_payment(
         get_text(
             "payment.info",
             lang,
-            card=settings.admin_card_number,
+            card=card_display,
             amount=format_price(order.price),
         ),
         parse_mode="HTML",
@@ -337,22 +354,43 @@ async def receive_payment_screenshot(
         parse_mode="HTML",
     )
 
-    # Notify admins
-    from bot.keyboards.order import admin_payment_kb
-
     order = await order_repo.get_order(session, order_id)
+
+    # Send screenshot to CHANNEL OWNER for confirmation
+    if order and order.channel and order.channel.owner:
+        from bot.keyboards.order import admin_payment_kb
+
+        try:
+            owner_lang = order.channel.owner.language or "uz"
+            await message.bot.send_photo(
+                chat_id=order.channel.owner.telegram_id,
+                photo=file_id,
+                caption=(
+                    f"💳 To'lov screenshot keldi!\n\n"
+                    f"Buyurtma: #{order_id}\n"
+                    f"Summa: {format_price(order.price)} so'm\n"
+                    f"Buyurtmachi: {message.from_user.full_name}\n\n"
+                    f"Kartangizga pul tushganini tekshiring!"
+                ),
+                reply_markup=admin_payment_kb(order_id, owner_lang),
+            )
+        except Exception:
+            pass
+
+    # Also notify bot admin for tracking
     for admin_id in settings.admin_ids:
         try:
             await message.bot.send_photo(
                 chat_id=admin_id,
                 photo=file_id,
                 caption=(
-                    f"💳 To'lov screenshot\n\n"
+                    f"📋 To'lov ma'lumoti (faqat ko'rish)\n\n"
                     f"Buyurtma: #{order_id}\n"
+                    f"Kanal: @{order.channel.channel_username}\n"
                     f"Summa: {format_price(order.price)} so'm\n"
-                    f"Buyurtmachi: {message.from_user.full_name}"
+                    f"Buyurtmachi: {message.from_user.full_name}\n"
+                    f"Kanal egasi tasdiqlaydi."
                 ),
-                reply_markup=admin_payment_kb(order_id),
             )
         except Exception:
             pass

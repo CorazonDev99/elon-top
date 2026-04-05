@@ -5,6 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 
 class ChannelRegStates(StatesGroup):
     enter_username = State()
+    enter_card_number = State()
     select_region = State()
     select_district = State()
     select_category = State()

@@ -26,6 +26,7 @@ class User(Base):
     full_name = Column(String(255), nullable=True)
     username = Column(String(255), nullable=True)
     phone = Column(String(20), nullable=True)
+    card_number = Column(String(20), nullable=True)
     language = Column(String(5), default="uz")
     is_blocked = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
@@ -172,3 +173,24 @@ class Order(Base):
 
     def __repr__(self):
         return f"<Order #{self.id} status={self.status}>"
+
+
+class MonthlyCommission(Base):
+    __tablename__ = "monthly_commissions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    owner_telegram_id = Column(BigInteger, ForeignKey("users.telegram_id"), nullable=False)
+    year = Column(Integer, nullable=False)
+    month = Column(Integer, nullable=False)  # 1-12
+    total_income = Column(Integer, default=0)  # UZS
+    commission_amount = Column(Integer, default=0)  # 5% of total_income
+    is_paid = Column(Boolean, default=False)
+    payment_screenshot_file_id = Column(String(255), nullable=True)
+    paid_at = Column(DateTime, nullable=True)
+    due_date = Column(Date, nullable=True)  # deadline to pay
+    created_at = Column(DateTime, default=func.now())
+
+    owner = relationship("User")
+
+    def __repr__(self):
+        return f"<Commission {self.owner_telegram_id} {self.year}/{self.month} paid={self.is_paid}>"

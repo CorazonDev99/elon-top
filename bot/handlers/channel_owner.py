@@ -13,8 +13,9 @@ from bot.keyboards.regions import regions_kb, districts_kb
 from bot.keyboards.order import order_action_kb, owner_published_kb
 from bot.states.channel_reg import ChannelRegStates
 from bot.states.order_states import RejectOrderStates
-from bot.database.repositories import channel_repo, region_repo, order_repo
+from bot.database.repositories import channel_repo, region_repo, order_repo, user_repo
 from bot.utils.formatting import format_price
+from bot.config import settings
 
 router = Router()
 
@@ -99,8 +100,42 @@ async def enter_username(
 
     await state.update_data(
         channel_username=username,
-        channel_title=username,  # will be updated later or kept
+        channel_title=username,
     )
+
+    # Check if user already has card number
+    user = await user_repo.get_user(session, message.from_user.id)
+    if user and user.card_number:
+        await state.update_data(card_number=user.card_number)
+        await state.set_state(ChannelRegStates.select_region)
+        regions = await region_repo.get_all_regions(session)
+        await message.answer(
+            get_text("owner.select_region", lang),
+            reply_markup=regions_kb(regions, lang),
+            parse_mode="HTML",
+        )
+    else:
+        await state.set_state(ChannelRegStates.enter_card_number)
+        await message.answer(
+            get_text("owner.enter_card", lang),
+            reply_markup=cancel_kb(lang),
+            parse_mode="HTML",
+        )
+
+
+# ─── Step 2: Enter card number ───
+@router.message(ChannelRegStates.enter_card_number)
+async def enter_card_number(
+    message: Message, session: AsyncSession, state: FSMContext, lang: str = "uz", **kwargs
+):
+    card = message.text.strip().replace(" ", "")
+    if not card.isdigit() or len(card) != 16:
+        await message.answer(get_text("owner.invalid_card", lang), parse_mode="HTML")
+        return
+
+    # Save card to user profile
+    await user_repo.update_card_number(session, message.from_user.id, card)
+    await state.update_data(card_number=card)
     await state.set_state(ChannelRegStates.select_region)
 
     regions = await region_repo.get_all_regions(session)
@@ -111,7 +146,7 @@ async def enter_username(
     )
 
 
-# ─── Step 2: Select region ───
+# ─── Step 3: Select region ───
 @router.callback_query(F.data.startswith("region:"), ChannelRegStates.select_region)
 async def reg_select_region(
     callback: CallbackQuery,
@@ -134,7 +169,7 @@ async def reg_select_region(
     await callback.answer()
 
 
-# ─── Step 3: Select district ───
+# ─── Step 4: Select district ───
 @router.callback_query(F.data.startswith("district:"), ChannelRegStates.select_district)
 async def reg_select_district(
     callback: CallbackQuery,
@@ -165,7 +200,7 @@ async def reg_select_district(
     await callback.answer()
 
 
-# ─── Step 4: Select category ───
+# ─── Step 5: Select category ───
 @router.callback_query(F.data.startswith("cat:"), ChannelRegStates.select_category)
 async def reg_select_category(
     callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
@@ -180,7 +215,7 @@ async def reg_select_category(
     await callback.answer()
 
 
-# ─── Step 5: Enter subscribers count ───
+# ─── Step 6: Enter subscribers count ───
 @router.message(ChannelRegStates.enter_subscribers)
 async def enter_subscribers(
     message: Message, state: FSMContext, lang: str = "uz", **kwargs
@@ -198,7 +233,7 @@ async def enter_subscribers(
     )
 
 
-# ─── Step 6: Enter avg views ───
+# ─── Step 7: Enter avg views ───
 @router.message(ChannelRegStates.enter_views)
 async def enter_views(
     message: Message, state: FSMContext, lang: str = "uz", **kwargs
@@ -216,7 +251,7 @@ async def enter_views(
     )
 
 
-# ─── Step 7: Enter description ───
+# ─── Step 8: Enter description ───
 @router.message(ChannelRegStates.enter_description)
 async def enter_description(
     message: Message,
@@ -244,7 +279,7 @@ async def enter_description(
     )
 
 
-# ─── Step 8: Set prices (loops through formats) ───
+# ─── Step 9: Set prices (loops through formats) ───
 @router.message(ChannelRegStates.set_price)
 async def set_price(
     message: Message,

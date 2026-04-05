@@ -35,3 +35,10 @@ async def block_user(session: AsyncSession, telegram_id: int):
     if user:
         user.is_blocked = True
         await session.commit()
+
+
+async def update_card_number(session: AsyncSession, telegram_id: int, card_number: str):
+    user = await get_user(session, telegram_id)
+    if user:
+        user.card_number = card_number
+        await session.commit()

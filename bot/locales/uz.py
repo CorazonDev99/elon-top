@@ -116,7 +116,7 @@ TEXTS = {
     ),
     "payment.screenshot_received": (
         "✅ Screenshot qabul qilindi!\n\n"
-        "Admin tekshirganidan keyin buyurtma tasdiqlanadi.\n"
+        "Kanal egasi to'lovni tekshiradi.\n"
         "Kuting..."
     ),
     "payment.confirmed": "✅ To'lov tasdiqlandi! Reklama tez orada chop etiladi.",
@@ -164,6 +164,12 @@ TEXTS = {
     ),
     "owner.invalid_number": "⚠️ Iltimos, raqam kiriting.",
     "owner.invalid_username": "⚠️ Noto'g'ri username. @ bilan boshlang.",
+    "owner.enter_card": (
+        "💳 <b>Karta raqamingizni kiriting:</b>\n\n"
+        "Reklama beruvchilar shu kartaga to'lov qiladi.\n"
+        "Masalan: <code>9860350149811860</code>"
+    ),
+    "owner.invalid_card": "⚠️ Noto'g'ri karta raqami. 16 ta raqam kiriting.",
     "owner.incoming_orders": "📩 <b>Kiruvchi buyurtmalar:</b>",
     "owner.no_orders": "📭 Hozircha yangi buyurtmalar yo'q.",
     "owner.accept_order": "✅ Qabul qilish",

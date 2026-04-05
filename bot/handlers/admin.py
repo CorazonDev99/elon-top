@@ -241,26 +241,23 @@ async def broadcast_cancel(
     await callback.answer()
 
 
-# ─── Payment confirmations ───
+# ─── Payment confirmations (by CHANNEL OWNER) ───
 @router.callback_query(F.data.startswith("admin_pay:confirm:"))
 async def confirm_payment(
     callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
 ):
-    if not is_admin(callback.from_user.id):
-        await callback.answer(get_text("access_denied", lang), show_alert=True)
-        return
-
     order_id = int(callback.data.split(":")[2])
     order = await order_repo.get_order(session, order_id)
+
+    if not order:
+        await callback.answer("Order not found", show_alert=True)
+        return
+
     await order_repo.update_order_status(session, order_id, "paid")
 
     await callback.message.edit_caption(
         caption=f"✅ Buyurtma #{order_id} to'lovi tasdiqlandi.",
     )
-
-    if not order:
-        await callback.answer()
-        return
 
     # Notify advertiser
     try:
@@ -279,11 +276,9 @@ async def confirm_payment(
 
     try:
         chat = await callback.bot.get_chat(f"@{channel_username}")
-        # Check if bot is admin
         bot_member = await callback.bot.get_chat_member(chat.id, callback.bot.id)
 
         if bot_member.status in ("administrator", "creator"):
-            # Bot is admin — publish automatically!
             if order.ad_media_file_id:
                 media_type = order.ad_media_type or "photo"
                 if media_type == "photo":
@@ -316,44 +311,41 @@ async def confirm_payment(
 
             published = True
             await order_repo.update_order_status(session, order_id, "published")
+    except Exception:
+        pass
 
-            # Notify admin
-            await callback.message.answer(
-                f"📢 Reklama @{channel_username} kanaliga avtomatik chop etildi! ✅",
+    # Notify about publish status
+    if published:
+        await callback.message.answer(
+            f"📢 Reklama @{channel_username} kanaliga avtomatik chop etildi! ✅",
+            parse_mode="HTML",
+        )
+    else:
+        from bot.keyboards.order import owner_published_kb
+
+        await callback.message.answer(
+            (
+                f"⚠️ Bot kanalda admin emas.\n"
+                f"Iltimos, reklamani o'zingiz chop eting va tugmani bosing."
+            ),
+            reply_markup=owner_published_kb(order_id, lang),
+            parse_mode="HTML",
+        )
+
+    # Notify bot admin about confirmed payment
+    for admin_id in settings.admin_ids:
+        try:
+            await callback.bot.send_message(
+                chat_id=admin_id,
+                text=(
+                    f"✅ To'lov tasdiqlandi\n\n"
+                    f"Buyurtma: #{order_id}\n"
+                    f"Kanal: @{order.channel.channel_username}\n"
+                    f"Summa: {format_price(order.price)} so'm\n"
+                    f"Kanal egasi tasdiqladi: {callback.from_user.full_name}"
+                ),
                 parse_mode="HTML",
             )
-    except Exception:
-        pass  # Bot is not admin or channel not found — fallback to manual
-
-    # Notify channel owner
-    if order.channel.owner:
-        try:
-            from bot.keyboards.order import owner_published_kb
-
-            owner_lang = order.channel.owner.language or "uz"
-
-            if published:
-                # Auto-published — just notify
-                await callback.bot.send_message(
-                    chat_id=order.channel.owner.telegram_id,
-                    text=(
-                        f"💰 Buyurtma #{order_id} uchun to'lov tasdiqlandi!\n\n"
-                        f"📢 Reklama kanalingizga avtomatik chop etildi ✅"
-                    ),
-                    parse_mode="HTML",
-                )
-            else:
-                # Manual — ask owner to publish
-                await callback.bot.send_message(
-                    chat_id=order.channel.owner.telegram_id,
-                    text=(
-                        f"💰 Buyurtma #{order_id} uchun to'lov tasdiqlandi!\n\n"
-                        f"⚠️ Bot kanalda admin emas.\n"
-                        f"Iltimos, reklamani o'zingiz chop eting va tugmani bosing."
-                    ),
-                    reply_markup=owner_published_kb(order_id, owner_lang),
-                    parse_mode="HTML",
-                )
         except Exception:
             pass
 
@@ -364,10 +356,6 @@ async def confirm_payment(
 async def reject_payment(
     callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
 ):
-    if not is_admin(callback.from_user.id):
-        await callback.answer(get_text("access_denied", lang), show_alert=True)
-        return
-
     order_id = int(callback.data.split(":")[2])
     order = await order_repo.get_order(session, order_id)
 
@@ -390,18 +378,100 @@ async def reject_payment(
     await callback.answer()
 
 
-# ─── All orders ───
+# ─── All orders + Income tracking (Admin) ───
 @router.message(F.text.in_(["📋 Barcha buyurtmalar", "📋 Все заказы"]))
 async def all_orders(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
     if not is_admin(message.from_user.id):
         await message.answer(get_text("access_denied", lang), parse_mode="HTML")
         return
 
+    from datetime import datetime
+    from bot.database.repositories import commission_repo
+
+    now = datetime.utcnow()
     orders_data = await order_repo.count_orders(session)
+    summaries = await commission_repo.get_owner_income_summary(session, now.year, now.month)
+
     text = (
         f"📋 <b>Buyurtmalar statistikasi:</b>\n\n"
         f"Jami: <b>{orders_data['total']}</b>\n"
         f"Bugun: <b>{orders_data['today']}</b>\n"
-        f"Bu hafta: <b>{orders_data['week']}</b>"
+        f"Bu hafta: <b>{orders_data['week']}</b>\n\n"
     )
-    await message.answer(text, parse_mode="HTML")
+
+    if summaries:
+        text += f"💰 <b>{now.strftime('%B %Y')} daromadlar:</b>\n\n"
+        for s in summaries:
+            owner = s["owner"]
+            paid_status = "✅" if s["is_paid"] else "❌"
+            text += (
+                f"👤 {owner.full_name or '—'} (@{owner.username or '—'})\n"
+                f"   Daromad: {format_price(s['income'])} so'm\n"
+                f"   Komissiya (5%): {format_price(s['commission'])} so'm {paid_status}\n\n"
+            )
+
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+    builder = InlineKeyboardBuilder()
+    builder.button(text="💰 Komissiyalar", callback_data="admin:commissions")
+    builder.button(text="⚠️ Qarzdorlarni bloklash", callback_data="admin:block_overdue")
+    builder.adjust(1)
+
+    await message.answer(text, reply_markup=builder.as_markup(), parse_mode="HTML")
+
+
+# ─── Commission management (Admin) ───
+@router.callback_query(F.data == "admin:commissions")
+async def show_commissions(
+    callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
+):
+    if not is_admin(callback.from_user.id):
+        await callback.answer(get_text("access_denied", lang), show_alert=True)
+        return
+
+    from bot.database.repositories import commission_repo
+
+    unpaid = await commission_repo.get_unpaid_commissions(session)
+
+    if not unpaid:
+        await callback.message.edit_text(
+            "✅ Hozircha to'lanmagan komissiyalar yo'q.", parse_mode="HTML"
+        )
+        await callback.answer()
+        return
+
+    text = "💰 <b>To'lanmagan komissiyalar:</b>\n\n"
+    for c in unpaid:
+        text += (
+            f"👤 {c.owner.full_name or '—'}\n"
+            f"   {c.year}/{c.month:02d} — {format_price(c.commission_amount)} so'm\n"
+            f"   Muddat: {c.due_date.strftime('%d.%m.%Y') if c.due_date else '—'}\n\n"
+        )
+
+    await callback.message.edit_text(text, parse_mode="HTML")
+    await callback.answer()
+
+
+@router.callback_query(F.data == "admin:block_overdue")
+async def block_overdue(
+    callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
+):
+    if not is_admin(callback.from_user.id):
+        await callback.answer(get_text("access_denied", lang), show_alert=True)
+        return
+
+    from bot.database.repositories import commission_repo
+
+    count = await commission_repo.deactivate_overdue_channels(session)
+
+    if count > 0:
+        await callback.message.answer(
+            f"🔴 {count} ta kanal bloklandi (komissiya to'lanmagan).",
+            parse_mode="HTML",
+        )
+    else:
+        await callback.message.answer(
+            "✅ Qarzdor kanal egalar topilmadi.", parse_mode="HTML"
+        )
+    await callback.answer()
+
