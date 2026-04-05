@@ -63,7 +63,7 @@ class UserRegisterMiddleware(BaseMiddleware):
                 if referrer:
                     db_user.referred_by = referral_id
                     referrer.referral_count = (referrer.referral_count or 0) + 1
-                    referrer.referral_bonus = (referrer.referral_bonus or 0) + 1000  # +1000 UZS bonus
+                    referrer.referral_bonus = (referrer.referral_bonus or 0) + 5000  # +5000 UZS bonus
                     data["referrer"] = referrer  # For notification
 
             session.add(db_user)

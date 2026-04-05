@@ -41,7 +41,7 @@ async def cmd_start(message: Message, state: FSMContext, lang: str = "uz", **kwa
                     "referral.new_join", ref_lang,
                     name=message.from_user.full_name or "—",
                     count=referrer.referral_count,
-                    bonus="1,000",
+                    bonus="5,000",
                 ),
                 parse_mode="HTML",
             )

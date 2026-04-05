@@ -341,7 +341,7 @@ TEXTS = {
         "👥 <b>Do'stlarni taklif qiling!</b>\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         "Har bir taklif qilingan do'st uchun\n"
-        "siz <b>1,000 so'm</b> bonus olasiz! 🎁\n\n"
+        "siz <b>5,000 so'm</b> bonus olasiz! 🎁\n\n"
         "📊 <b>Statistika:</b>\n"
         "👥 Taklif qilingan: <b>{count}</b> ta\n"
         "💰 Bonus balans: <b>{bonus} so'm</b>\n\n"
