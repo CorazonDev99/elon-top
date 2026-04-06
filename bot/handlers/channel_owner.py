@@ -131,9 +131,61 @@ async def enter_username(
 
     username = username[1:]  # remove @
 
+    # ─── Verify user is admin of the channel/group ───
+    from aiogram import Bot
+    bot: Bot = message.bot
+
+    try:
+        chat = await bot.get_chat(f"@{username}")
+    except Exception:
+        await message.answer(
+            "⚠️ " + (
+                "Kanal/guruh topilmadi. Username to'g'ri yozilganini tekshiring."
+                if lang == "uz" else
+                "Канал/группа не найден(а). Проверьте username."
+            ),
+            parse_mode="HTML",
+        )
+        return
+
+    # Check that user is admin or creator
+    try:
+        member = await bot.get_chat_member(chat.id, message.from_user.id)
+    except Exception:
+        await message.answer(
+            "⚠️ " + (
+                "Bot bu kanal/guruhga kira olmadi. Botni admin qiling!"
+                if lang == "uz" else
+                "Бот не смог получить доступ. Добавьте бота админом!"
+            ),
+            parse_mode="HTML",
+        )
+        return
+
+    if member.status not in ("creator", "administrator"):
+        await message.answer(
+            "🚫 " + (
+                "Siz bu kanal/guruh admini emassiz! Faqat adminlar qo'sha oladi."
+                if lang == "uz" else
+                "Вы не админ этого канала/группы! Только админы могут добавлять."
+            ),
+            parse_mode="HTML",
+        )
+        return
+
+    # ─── Auto-fetch subscriber count ───
+    try:
+        member_count = await bot.get_chat_member_count(chat.id)
+    except Exception:
+        member_count = 0
+
+    channel_title = chat.title or username
+
     await state.update_data(
         channel_username=username,
-        channel_title=username,
+        channel_title=channel_title,
+        subscribers_count=member_count,
+        chat_id=chat.id,
     )
 
     # Check if user already has card number
@@ -143,14 +195,22 @@ async def enter_username(
         await state.set_state(ChannelRegStates.select_region)
         regions = await region_repo.get_all_regions(session)
         await message.answer(
-            get_text("owner.select_region", lang),
+            "✅ " + (
+                f"<b>{channel_title}</b> topildi! ({member_count} ta a'zo)\n\n"
+                if lang == "uz" else
+                f"<b>{channel_title}</b> найден! ({member_count} участн.)\n\n"
+            ) + get_text("owner.select_region", lang),
             reply_markup=regions_kb(regions, lang),
             parse_mode="HTML",
         )
     else:
         await state.set_state(ChannelRegStates.enter_card_number)
         await message.answer(
-            get_text("owner.enter_card", lang),
+            "✅ " + (
+                f"<b>{channel_title}</b> topildi! ({member_count} ta a'zo)\n\n"
+                if lang == "uz" else
+                f"<b>{channel_title}</b> найден! ({member_count} участн.)\n\n"
+            ) + get_text("owner.enter_card", lang),
             reply_markup=cancel_kb(lang),
             parse_mode="HTML",
         )
@@ -233,17 +293,17 @@ async def reg_select_district(
     await callback.answer()
 
 
-# ─── Step 5: Select category ───
+# ─── Step 5: Select category → skip to views (subs auto-fetched) ───
 @router.callback_query(F.data.startswith("cat:"), ChannelRegStates.select_category)
 async def reg_select_category(
     callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
 ):
     category_id = int(callback.data.split(":")[1])
     await state.update_data(category_id=category_id)
-    await state.set_state(ChannelRegStates.enter_subscribers)
+    await state.set_state(ChannelRegStates.enter_views)
 
     await callback.message.edit_text(
-        get_text("owner.enter_subscribers", lang), parse_mode="HTML"
+        get_text("owner.enter_views", lang), parse_mode="HTML"
     )
     await callback.answer()
 
