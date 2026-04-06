@@ -7,7 +7,7 @@ from aiogram.types import Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb
 from bot.database.repositories import user_repo
 from bot.utils.formatting import format_price
@@ -15,7 +15,7 @@ from bot.utils.formatting import format_price
 router = Router()
 
 
-@router.message(F.text.in_(["👥 Do'stlarni taklif qilish", "👥 Пригласить друзей"]))
+@router.message(F.text.in_(menu_match("menu.referral")))
 async def show_referral(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
     user = await user_repo.get_user(session, message.from_user.id)
     if not user:

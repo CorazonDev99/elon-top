@@ -7,14 +7,14 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb
 
 router = Router()
 router.name = "cancel_router"
 
 
-@router.message(F.text.in_(["❌ Bekor qilish", "❌ Отмена"]))
+@router.message(F.text.in_(menu_match("menu.cancel")))
 async def global_cancel(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
     """Cancel any active FSM state and return to main menu."""
     current_state = await state.get_state()

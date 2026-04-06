@@ -10,7 +10,7 @@ from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, LANGUAGES, menu_match
 from bot.keyboards.main_menu import main_menu_kb, settings_kb
 from bot.keyboards.admin import language_select_kb, admin_menu_kb
 from bot.database.repositories import user_repo
@@ -97,26 +97,26 @@ async def cmd_start(message: Message, state: FSMContext, lang: str = "uz", **kwa
         )
 
 
-@router.message(F.text.in_(["📢 Reklama joylashtirish", "📢 Разместить рекламу"]))
+@router.message(F.text.in_(menu_match("menu.browse")))
 async def browse_menu(message: Message, lang: str = "uz", **kwargs):
     # Handled by browse.py — this import triggers region selection
     from bot.handlers.browse import show_regions
     await show_regions(message, lang=lang, **kwargs)
 
 
-@router.message(F.text.in_(["📋 Mening buyurtmalarim", "📋 Мои заказы"]))
+@router.message(F.text.in_(menu_match("menu.my_orders")))
 async def my_orders_menu(message: Message, lang: str = "uz", **kwargs):
     from bot.handlers.my_orders import show_my_orders
     await show_my_orders(message, lang=lang, **kwargs)
 
 
-@router.message(F.text.in_(["📺 Kanal/Guruhlarim", "📺 Каналы/Группы"]))
+@router.message(F.text.in_(menu_match("menu.my_channels")))
 async def my_channels_menu(message: Message, lang: str = "uz", **kwargs):
     from bot.handlers.channel_owner import show_my_channels
     await show_my_channels(message, lang=lang, **kwargs)
 
 
-@router.message(F.text.in_(["⚙️ Sozlamalar", "⚙️ Настройки"]))
+@router.message(F.text.in_(menu_match("menu.settings")))
 async def settings_menu(message: Message, lang: str = "uz", **kwargs):
     # Check if admin
     if message.from_user.id in settings.admin_ids:
@@ -133,7 +133,7 @@ async def settings_menu(message: Message, lang: str = "uz", **kwargs):
         )
 
 
-@router.message(F.text.in_(["🌐 Tilni o'zgartirish", "🌐 Сменить язык"]))
+@router.message(F.text.in_(menu_match("menu.language")))
 async def change_language(message: Message, **kwargs):
     await message.answer(
         get_text("lang.select"),
@@ -162,7 +162,7 @@ async def set_language(
     await callback.answer()
 
 
-@router.message(F.text.in_(["ℹ️ Bot haqida", "ℹ️ О боте"]))
+@router.message(F.text.in_(menu_match("menu.about")))
 async def about(message: Message, lang: str = "uz", **kwargs):
     await message.answer(
         get_text("about", lang),
@@ -170,7 +170,7 @@ async def about(message: Message, lang: str = "uz", **kwargs):
     )
 
 
-@router.message(F.text.in_(["🏠 Bosh menyu", "🏠 Главное меню"]))
+@router.message(F.text.in_(menu_match("menu.home")))
 async def home(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
     await state.clear()
     await message.answer(

@@ -7,7 +7,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb, cancel_kb
 from bot.keyboards.admin import admin_menu_kb, moderate_channel_kb, confirm_broadcast_kb
 from bot.states.admin_states import AdminStates
@@ -37,7 +37,7 @@ async def cmd_admin(message: Message, lang: str = "uz", **kwargs):
 
 
 # ─── Stats ───
-@router.message(F.text.in_(["📊 Statistika", "📊 Статистика"]))
+@router.message(F.text.in_(menu_match("admin.stats")))
 async def show_stats(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
     if not is_admin(message.from_user.id):
         await message.answer(get_text("access_denied", lang), parse_mode="HTML")
@@ -65,7 +65,7 @@ async def show_stats(message: Message, session: AsyncSession, lang: str = "uz", 
 
 
 # ─── Moderation ───
-@router.message(F.text.in_(["✅ Moderatsiya", "✅ Модерация"]))
+@router.message(F.text.in_(menu_match("admin.moderate")))
 async def show_moderation(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
     if not is_admin(message.from_user.id):
         await message.answer(get_text("access_denied", lang), parse_mode="HTML")
@@ -194,7 +194,7 @@ async def reject_channel(
 
 
 # ─── Broadcast ───
-@router.message(F.text.in_(["📢 Xabar yuborish", "📢 Рассылка"]))
+@router.message(F.text.in_(menu_match("admin.broadcast")))
 async def start_broadcast(
     message: Message, state: FSMContext, lang: str = "uz", **kwargs
 ):
@@ -413,7 +413,7 @@ async def reject_payment(
 
 
 # ─── All orders + Income tracking (Admin) ───
-@router.message(F.text.in_(["📋 Barcha buyurtmalar", "📋 Все заказы"]))
+@router.message(F.text.in_(menu_match("admin.all_orders")))
 async def all_orders(message: Message, session: AsyncSession, lang: str = "uz", **kwargs):
     if not is_admin(message.from_user.id):
         await message.answer(get_text("access_denied", lang), parse_mode="HTML")

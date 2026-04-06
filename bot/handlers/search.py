@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb, cancel_kb
 from bot.database.repositories import channel_repo
 from bot.utils.formatting import format_price
@@ -20,7 +20,7 @@ class SearchStates(StatesGroup):
     waiting_query = State()
 
 
-@router.message(F.text.in_(["🔍 Qidirish", "🔍 Поиск"]))
+@router.message(F.text.in_(menu_match("menu.search")))
 async def start_search(message: Message, state: FSMContext, lang: str = "uz", **kwargs):
     await state.set_state(SearchStates.waiting_query)
     await message.answer(

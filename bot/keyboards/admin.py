@@ -44,9 +44,10 @@ def moderate_channel_kb(
 
 
 def language_select_kb() -> InlineKeyboardMarkup:
+    from bot.locales.i18n import available_languages
     builder = InlineKeyboardBuilder()
-    builder.button(text="🇺🇿 O'zbekcha", callback_data="lang:uz")
-    builder.button(text="🇷🇺 Русский", callback_data="lang:ru")
+    for code, label in available_languages():
+        builder.button(text=label, callback_data=f"lang:{code}")
     builder.adjust(2)
     return builder.as_markup()
 

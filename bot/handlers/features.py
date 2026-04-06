@@ -14,7 +14,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot.locales.i18n import get_text
+from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb, cancel_kb
 from bot.database.repositories import channel_repo, order_repo, subscription_repo, user_repo
 from bot.utils.formatting import format_price
@@ -101,7 +101,7 @@ class BulkOrderStates(StatesGroup):
     preview = State()
 
 
-@router.message(F.text.in_(["📦 Paket buyurtma", "📦 Пакетный заказ"]))
+@router.message(F.text.in_(menu_match("menu.bulk_order")))
 async def start_bulk_order(
     message: Message, session: AsyncSession, state: FSMContext, lang: str = "uz", **kwargs
 ):
@@ -253,7 +253,7 @@ async def bulk_done_selecting(
 # SUBSCRIPTIONS
 # ═══════════════════════════════════════════════
 
-@router.message(F.text.in_(["🔄 Obunalar", "🔄 Подписки"]))
+@router.message(F.text.in_(menu_match("menu.subscriptions")))
 async def show_subscriptions(
     message: Message, session: AsyncSession, lang: str = "uz", **kwargs
 ):
