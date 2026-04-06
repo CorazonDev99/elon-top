@@ -76,6 +76,7 @@ async def seed_ad_formats(session):
             name_ru=fmt_data["name_ru"],
             description_uz=fmt_data.get("description_uz"),
             description_ru=fmt_data.get("description_ru"),
+            duration_days=fmt_data.get("duration_days", 1),
             sort_order=i + 1,
         )
         session.add(ad_format)

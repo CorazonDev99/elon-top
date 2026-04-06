@@ -409,6 +409,16 @@ async def confirm_payment(
 
             published = True
             await order_repo.update_order_status(session, order_id, "published")
+
+            # Set up recurring publish schedule
+            from datetime import date as date_type, timedelta
+            duration = order.ad_format.duration_days if order.ad_format else 1
+            today = date_type.today()
+            order.publish_start_date = today
+            order.publish_end_date = today + timedelta(days=duration - 1)
+            order.last_published_at = today
+            order.publish_count = 1
+            await session.commit()
     except Exception:
         pass
 

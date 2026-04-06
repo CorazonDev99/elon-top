@@ -130,6 +130,7 @@ class AdFormat(Base):
     name_ru = Column(String(100), nullable=False)
     description_uz = Column(String(255), nullable=True)
     description_ru = Column(String(255), nullable=True)
+    duration_days = Column(Integer, default=1)  # 1 = day, 7 = week, 30 = month
     sort_order = Column(Integer, default=0)
 
     pricing = relationship("ChannelPricing", back_populates="ad_format")
@@ -178,6 +179,10 @@ class Order(Base):
     rating = Column(Integer, nullable=True)  # 1-5 stars
     post_views = Column(Integer, nullable=True)  # report: views after publish
     post_reach = Column(Integer, nullable=True)  # report: reach after publish
+    publish_start_date = Column(Date, nullable=True)  # when recurring starts
+    publish_end_date = Column(Date, nullable=True)  # when recurring ends
+    last_published_at = Column(Date, nullable=True)  # last day it was published
+    publish_count = Column(Integer, default=0)  # how many times published
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 

@@ -13,6 +13,7 @@ from bot.database.engine import async_session
 from bot.database.repositories import commission_repo, user_repo
 from bot.utils.formatting import format_price
 from bot.config import settings
+from sqlalchemy.orm import selectinload
 
 logger = logging.getLogger(__name__)
 
@@ -476,6 +477,7 @@ async def scheduler_loop(bot):
             await guarantee_auto_refund(bot)
             await send_top10_weekly(bot)
             await process_subscriptions(bot)
+            await publish_recurring_ads(bot)
             logger.info("⏰ Scheduled tasks completed")
 
         except asyncio.CancelledError:
@@ -484,3 +486,99 @@ async def scheduler_loop(bot):
         except Exception as e:
             logger.error(f"⏰ Scheduler error: {e}")
             await asyncio.sleep(3600)  # Retry in 1 hour
+
+
+async def publish_recurring_ads(bot):
+    """Publish recurring ads (weekly/monthly) — runs daily."""
+    today = date.today()
+    logger.info(f"📢 Checking recurring ads for {today}")
+
+    async with async_session() as session:
+        from sqlalchemy import select, and_
+        from bot.database.models import Order, Channel
+
+        # Find orders that:
+        # 1. Status is "published" (active recurring)
+        # 2. publish_end_date >= today (not expired)
+        # 3. last_published_at < today (not yet published today)
+        result = await session.execute(
+            select(Order)
+            .where(
+                Order.status == "published",
+                Order.publish_end_date >= today,
+                Order.last_published_at < today,
+            )
+            .options(
+                selectinload(Order.channel),
+                selectinload(Order.ad_format),
+                selectinload(Order.advertiser),
+            )
+        )
+        orders = result.scalars().all()
+
+        if not orders:
+            logger.info("📢 No recurring ads to publish today")
+            return
+
+        logger.info(f"📢 Found {len(orders)} recurring ads to publish")
+
+        for order in orders:
+            try:
+                channel_username = order.channel.channel_username
+                chat = await bot.get_chat(f"@{channel_username}")
+                bot_member = await bot.get_chat_member(chat.id, bot.id)
+
+                if bot_member.status not in ("administrator", "creator"):
+                    logger.warning(f"Bot is not admin in @{channel_username}, skipping")
+                    continue
+
+                # Publish the ad
+                if order.ad_media_file_id:
+                    media_type = order.ad_media_type or "photo"
+                    if media_type == "photo":
+                        await bot.send_photo(
+                            chat_id=chat.id,
+                            photo=order.ad_media_file_id,
+                            caption=order.ad_text or "",
+                            parse_mode="HTML",
+                        )
+                    elif media_type == "video":
+                        await bot.send_video(
+                            chat_id=chat.id,
+                            video=order.ad_media_file_id,
+                            caption=order.ad_text or "",
+                            parse_mode="HTML",
+                        )
+                    elif media_type == "document":
+                        await bot.send_document(
+                            chat_id=chat.id,
+                            document=order.ad_media_file_id,
+                            caption=order.ad_text or "",
+                            parse_mode="HTML",
+                        )
+                elif order.ad_text:
+                    await bot.send_message(
+                        chat_id=chat.id,
+                        text=order.ad_text,
+                        parse_mode="HTML",
+                    )
+
+                # Update tracking
+                order.last_published_at = today
+                order.publish_count = (order.publish_count or 0) + 1
+
+                # Check if this was the last day
+                if today >= order.publish_end_date:
+                    order.status = "completed"
+                    logger.info(f"📢 Order #{order.id} completed (all days published)")
+
+                await session.commit()
+                logger.info(
+                    f"📢 Published recurring ad #{order.id} to @{channel_username} "
+                    f"(day {order.publish_count}/{(order.publish_end_date - order.publish_start_date).days + 1})"
+                )
+
+                await asyncio.sleep(1)  # Rate limit
+
+            except Exception as e:
+                logger.error(f"📢 Failed to publish recurring ad #{order.id}: {e}")

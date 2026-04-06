@@ -329,17 +329,20 @@ AD_FORMATS_DATA = [
         "name_ru": "📅 На 1 день",
         "description_uz": "Reklama 1 kun davomida joylashtiriladi",
         "description_ru": "Реклама размещается на 1 день",
+        "duration_days": 1,
     },
     {
         "name_uz": "📆 1 haftalik",
         "name_ru": "📆 На неделю",
         "description_uz": "Reklama har kuni 7 kun davomida joylashtiriladi",
         "description_ru": "Реклама каждый день в течение 7 дней",
+        "duration_days": 7,
     },
     {
         "name_uz": "🗓 1 oylik",
         "name_ru": "🗓 На месяц",
         "description_uz": "Reklama har kuni 30 kun davomida joylashtiriladi",
         "description_ru": "Реклама каждый день в течение 30 дней",
+        "duration_days": 30,
     },
 ]
