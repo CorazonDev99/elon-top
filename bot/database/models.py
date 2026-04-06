@@ -105,6 +105,7 @@ class Channel(Base):
     rating_count = Column(Integer, default=0)
     is_verified = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
+    is_group = Column(Boolean, default=False)  # True = group, False = channel
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 

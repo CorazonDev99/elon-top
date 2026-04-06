@@ -47,18 +47,33 @@ async def show_stats(message: Message, session: AsyncSession, lang: str = "uz", 
     channels_data = await channel_repo.count_channels(session)
     orders_data = await order_repo.count_orders(session)
 
+    if lang == "uz":
+        stats = (
+            f"📊 <b>Statistika:</b>\n\n"
+            f"👥 Foydalanuvchilar: <b>{users_count}</b>\n"
+            f"📺 Kanallar: <b>{channels_data['channels']}</b>\n"
+            f"👥 Guruhlar: <b>{channels_data['groups']}</b>\n"
+            f"  ├ ✅ Tasdiqlangan: <b>{channels_data['verified']}</b>\n"
+            f"  └ ⏳ Kutilmoqda: <b>{channels_data['pending']}</b>\n"
+            f"📋 Buyurtmalar: <b>{orders_data['total']}</b>\n"
+            f"  ├ Bugun: <b>{orders_data['today']}</b>\n"
+            f"  └ Bu hafta: <b>{orders_data['week']}</b>"
+        )
+    else:
+        stats = (
+            f"📊 <b>Статистика:</b>\n\n"
+            f"👥 Пользователи: <b>{users_count}</b>\n"
+            f"📺 Каналы: <b>{channels_data['channels']}</b>\n"
+            f"👥 Группы: <b>{channels_data['groups']}</b>\n"
+            f"  ├ ✅ Подтверждено: <b>{channels_data['verified']}</b>\n"
+            f"  └ ⏳ Ожидание: <b>{channels_data['pending']}</b>\n"
+            f"📋 Заказы: <b>{orders_data['total']}</b>\n"
+            f"  ├ Сегодня: <b>{orders_data['today']}</b>\n"
+            f"  └ На этой неделе: <b>{orders_data['week']}</b>"
+        )
+
     await message.answer(
-        get_text(
-            "admin.stats_text",
-            lang,
-            users=users_count,
-            channels=channels_data["total"],
-            verified=channels_data["verified"],
-            pending=channels_data["pending"],
-            orders=orders_data["total"],
-            today_orders=orders_data["today"],
-            week_orders=orders_data["week"],
-        ),
+        stats,
         reply_markup=admin_menu_kb(lang),
         parse_mode="HTML",
     )

@@ -449,6 +449,7 @@ async def set_price(
             avg_views=data["avg_views"],
             description=data["description"],
             prices={int(k): v for k, v in data["prices"].items()},
+            is_group=data.get("is_group", False),
         )
 
         await state.clear()

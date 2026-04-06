@@ -122,6 +122,7 @@ async def create_channel(
     avg_views: int,
     description: str,
     prices: dict[int, int],  # {ad_format_id: price}
+    is_group: bool = False,
 ) -> Channel:
     channel = Channel(
         owner_telegram_id=owner_telegram_id,
@@ -134,6 +135,7 @@ async def create_channel(
         description=description,
         is_verified=False,
         is_active=True,
+        is_group=is_group,
     )
     session.add(channel)
     await session.flush()
@@ -197,10 +199,18 @@ async def count_channels(session: AsyncSession) -> dict:
     pending = await session.execute(
         select(func.count(Channel.id)).where(Channel.is_verified == False)
     )
+    channels_only = await session.execute(
+        select(func.count(Channel.id)).where(Channel.is_group == False)
+    )
+    groups_only = await session.execute(
+        select(func.count(Channel.id)).where(Channel.is_group == True)
+    )
     return {
         "total": total.scalar() or 0,
         "verified": verified.scalar() or 0,
         "pending": pending.scalar() or 0,
+        "channels": channels_only.scalar() or 0,
+        "groups": groups_only.scalar() or 0,
     }
 
 
