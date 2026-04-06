@@ -233,8 +233,35 @@ async def broadcast_text(
     lang: str = "uz",
     **kwargs,
 ):
+    # Determine what content was sent
+    broadcast_data = {}
+
+    if message.photo:
+        broadcast_data["media_type"] = "photo"
+        broadcast_data["media_file_id"] = message.photo[-1].file_id
+        broadcast_data["caption"] = message.caption or ""
+    elif message.video:
+        broadcast_data["media_type"] = "video"
+        broadcast_data["media_file_id"] = message.video.file_id
+        broadcast_data["caption"] = message.caption or ""
+    elif message.document:
+        broadcast_data["media_type"] = "document"
+        broadcast_data["media_file_id"] = message.document.file_id
+        broadcast_data["caption"] = message.caption or ""
+    elif message.text:
+        broadcast_data["media_type"] = "text"
+        broadcast_data["text"] = message.text
+    else:
+        await message.answer(
+            "⚠️ Faqat matn, rasm, video yoki fayl yuboring.",
+            parse_mode="HTML",
+        )
+        return
+
     users = await user_repo.get_all_users(session)
-    await state.update_data(broadcast_message=message.text, user_count=len(users))
+    broadcast_data["user_count"] = len(users)
+
+    await state.update_data(**broadcast_data)
     await state.set_state(AdminStates.broadcast_confirm)
 
     await message.answer(
@@ -253,7 +280,7 @@ async def broadcast_confirm(
     **kwargs,
 ):
     data = await state.get_data()
-    text = data["broadcast_message"]
+    media_type = data.get("media_type", "text")
     users = await user_repo.get_all_users(session)
 
     await state.clear()
@@ -262,11 +289,33 @@ async def broadcast_confirm(
     sent = 0
     for user in users:
         try:
-            await callback.bot.send_message(
-                chat_id=user.telegram_id,
-                text=text,
-                parse_mode="HTML",
-            )
+            if media_type == "photo":
+                await callback.bot.send_photo(
+                    chat_id=user.telegram_id,
+                    photo=data["media_file_id"],
+                    caption=data.get("caption", ""),
+                    parse_mode="HTML",
+                )
+            elif media_type == "video":
+                await callback.bot.send_video(
+                    chat_id=user.telegram_id,
+                    video=data["media_file_id"],
+                    caption=data.get("caption", ""),
+                    parse_mode="HTML",
+                )
+            elif media_type == "document":
+                await callback.bot.send_document(
+                    chat_id=user.telegram_id,
+                    document=data["media_file_id"],
+                    caption=data.get("caption", ""),
+                    parse_mode="HTML",
+                )
+            else:
+                await callback.bot.send_message(
+                    chat_id=user.telegram_id,
+                    text=data.get("text", ""),
+                    parse_mode="HTML",
+                )
             sent += 1
         except Exception:
             pass
