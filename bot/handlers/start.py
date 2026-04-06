@@ -118,19 +118,11 @@ async def my_channels_menu(message: Message, lang: str = "uz", **kwargs):
 
 @router.message(F.text.in_(menu_match("menu.settings")))
 async def settings_menu(message: Message, lang: str = "uz", **kwargs):
-    # Check if admin
-    if message.from_user.id in settings.admin_ids:
-        await message.answer(
-            get_text("admin.panel", lang),
-            reply_markup=admin_menu_kb(lang),
-            parse_mode="HTML",
-        )
-    else:
-        await message.answer(
-            get_text("menu.main", lang),
-            reply_markup=settings_kb(lang),
-            parse_mode="HTML",
-        )
+    await message.answer(
+        get_text("lang.select", lang),
+        reply_markup=language_select_kb(),
+        parse_mode="HTML",
+    )
 
 
 @router.message(F.text.in_(menu_match("menu.language")))
