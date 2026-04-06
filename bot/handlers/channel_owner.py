@@ -586,10 +586,10 @@ async def edit_prices_start(
 
     formats = await channel_repo.get_ad_formats(session)
 
-    # Build current prices map
+    # Build current prices map (string keys for JSON compatibility)
     current_prices = {}
     for p in channel.pricing:
-        current_prices[p.ad_format_id] = p.price
+        current_prices[str(p.ad_format_id)] = p.price
 
     await state.set_state(EditPriceStates.set_price)
     await state.update_data(
@@ -602,7 +602,7 @@ async def edit_prices_start(
 
     fmt = formats[0]
     fmt_name = fmt.name_uz if lang == "uz" else fmt.name_ru
-    old_price = current_prices.get(fmt.id, 0)
+    old_price = current_prices.get(str(fmt.id), 0)
 
     text = (
         f"💰 <b>{fmt_name}</b>\n"
@@ -639,14 +639,14 @@ async def edit_price_value(
     current_prices = data.get("current_prices", {})
 
     fmt = formats[idx]
-    prices[fmt["id"]] = price
+    prices[str(fmt["id"])] = price
 
     next_idx = idx + 1
     if next_idx < len(formats):
         await state.update_data(current_format_index=next_idx, prices=prices)
         next_fmt = formats[next_idx]
         fmt_name = next_fmt["name_uz"] if lang == "uz" else next_fmt["name_ru"]
-        old_price = current_prices.get(next_fmt["id"], 0)
+        old_price = current_prices.get(str(next_fmt["id"]), 0)
 
         text = (
             f"💰 <b>{fmt_name}</b>\n"
