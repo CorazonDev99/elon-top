@@ -28,7 +28,7 @@ class User(Base):
     username = Column(String(255), nullable=True)
     phone = Column(String(20), nullable=True)
     card_number = Column(String(20), nullable=True)
-    language = Column(String(5), default="uz")
+    language = Column(String(10), default="uz")
     is_blocked = Column(Boolean, default=False)
     referred_by = Column(BigInteger, nullable=True)  # telegram_id of referrer
     referral_count = Column(Integer, default=0)  # how many users invited
