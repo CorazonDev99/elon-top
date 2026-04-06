@@ -11,7 +11,7 @@ from bot.locales.i18n import get_text
 from bot.keyboards.main_menu import main_menu_kb, cancel_kb
 from bot.keyboards.regions import regions_kb, districts_kb
 from bot.keyboards.order import order_action_kb, owner_published_kb
-from bot.states.channel_reg import ChannelRegStates
+from bot.states.channel_reg import ChannelRegStates, EditPriceStates
 from bot.states.order_states import RejectOrderStates
 from bot.database.repositories import channel_repo, region_repo, order_repo, user_repo
 from bot.utils.formatting import format_price
@@ -567,6 +567,116 @@ async def delete_channel(
     )
     await callback.answer()
 
+
+# ─── Edit prices ───
+@router.callback_query(F.data.startswith("owner:edit_prices:"))
+async def edit_prices_start(
+    callback: CallbackQuery,
+    session: AsyncSession,
+    state: FSMContext,
+    lang: str = "uz",
+    **kwargs,
+):
+    channel_id = int(callback.data.split(":")[2])
+    channel = await channel_repo.get_channel_full(session, channel_id)
+
+    if not channel:
+        await callback.answer("Channel not found", show_alert=True)
+        return
+
+    formats = await channel_repo.get_ad_formats(session)
+
+    # Build current prices map
+    current_prices = {}
+    for p in channel.pricing:
+        current_prices[p.ad_format_id] = p.price
+
+    await state.set_state(EditPriceStates.set_price)
+    await state.update_data(
+        edit_channel_id=channel_id,
+        ad_formats=[{"id": f.id, "name_uz": f.name_uz, "name_ru": f.name_ru} for f in formats],
+        current_format_index=0,
+        prices={},
+        current_prices=current_prices,
+    )
+
+    fmt = formats[0]
+    fmt_name = fmt.name_uz if lang == "uz" else fmt.name_ru
+    old_price = current_prices.get(fmt.id, 0)
+
+    text = (
+        f"💰 <b>{fmt_name}</b>\n"
+        f"Hozirgi narx: <b>{format_price(old_price)} so'm</b>\n\n"
+        f"Yangi narxni kiriting (UZS):"
+        if lang == "uz" else
+        f"💰 <b>{fmt_name}</b>\n"
+        f"Текущая цена: <b>{format_price(old_price)} сум</b>\n\n"
+        f"Введите новую цену (UZS):"
+    )
+
+    await callback.message.edit_text(text, parse_mode="HTML")
+    await callback.answer()
+
+
+@router.message(EditPriceStates.set_price)
+async def edit_price_value(
+    message: Message,
+    session: AsyncSession,
+    state: FSMContext,
+    lang: str = "uz",
+    **kwargs,
+):
+    try:
+        price = int(message.text.strip().replace(" ", "").replace(",", ""))
+    except ValueError:
+        await message.answer(get_text("owner.invalid_number", lang), parse_mode="HTML")
+        return
+
+    data = await state.get_data()
+    formats = data["ad_formats"]
+    idx = data["current_format_index"]
+    prices = data["prices"]
+    current_prices = data.get("current_prices", {})
+
+    fmt = formats[idx]
+    prices[fmt["id"]] = price
+
+    next_idx = idx + 1
+    if next_idx < len(formats):
+        await state.update_data(current_format_index=next_idx, prices=prices)
+        next_fmt = formats[next_idx]
+        fmt_name = next_fmt["name_uz"] if lang == "uz" else next_fmt["name_ru"]
+        old_price = current_prices.get(next_fmt["id"], 0)
+
+        text = (
+            f"💰 <b>{fmt_name}</b>\n"
+            f"Hozirgi narx: <b>{format_price(old_price)} so'm</b>\n\n"
+            f"Yangi narxni kiriting (UZS):"
+            if lang == "uz" else
+            f"💰 <b>{fmt_name}</b>\n"
+            f"Текущая цена: <b>{format_price(old_price)} сум</b>\n\n"
+            f"Введите новую цену (UZS):"
+        )
+        await message.answer(text, parse_mode="HTML")
+    else:
+        # All prices set — save
+        await state.update_data(prices=prices)
+        channel_id = data["edit_channel_id"]
+
+        await channel_repo.update_channel_prices(
+            session, channel_id, {int(k): v for k, v in prices.items()}
+        )
+        await state.clear()
+
+        success = (
+            "✅ <b>Narxlar yangilandi!</b>" if lang == "uz"
+            else "✅ <b>Цены обновлены!</b>"
+        )
+        await message.answer(
+            success,
+            reply_markup=main_menu_kb(lang),
+            parse_mode="HTML",
+        )
 
 @router.callback_query(F.data == "owner:back_to_list")
 async def back_to_channel_list(

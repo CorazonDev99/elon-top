@@ -13,3 +13,7 @@ class ChannelRegStates(StatesGroup):
     enter_views = State()
     enter_description = State()
     set_price = State()  # loops through formats
+
+
+class EditPriceStates(StatesGroup):
+    set_price = State()  # loops through formats for editing

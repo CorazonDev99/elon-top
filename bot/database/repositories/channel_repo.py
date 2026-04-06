@@ -154,6 +154,28 @@ async def create_channel(
     return channel
 
 
+async def update_channel_prices(
+    session: AsyncSession, channel_id: int, prices: dict[int, int]
+):
+    """Update prices for a channel — delete old, insert new."""
+    # Delete existing prices
+    from sqlalchemy import delete
+    await session.execute(
+        delete(ChannelPricing).where(ChannelPricing.channel_id == channel_id)
+    )
+
+    # Insert new prices
+    for format_id, price in prices.items():
+        if price > 0:
+            session.add(ChannelPricing(
+                channel_id=channel_id,
+                ad_format_id=format_id,
+                price=price,
+            ))
+
+    await session.commit()
+
+
 async def verify_channel(session: AsyncSession, channel_id: int, verified: bool):
     channel = await session.get(Channel, channel_id)
     if channel:
