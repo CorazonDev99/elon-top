@@ -35,6 +35,14 @@ async def get_ad_format(session: AsyncSession, format_id: int) -> AdFormat | Non
     return result.scalar_one_or_none()
 
 
+async def get_channel_by_username(session: AsyncSession, username: str) -> Channel | None:
+    """Check if a channel/group with this username already exists."""
+    result = await session.execute(
+        select(Channel).where(Channel.channel_username == username)
+    )
+    return result.scalar_one_or_none()
+
+
 async def get_channels_by_district(
     session: AsyncSession, district_id: int
 ) -> list[Channel]:

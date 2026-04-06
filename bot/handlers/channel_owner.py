@@ -173,6 +173,20 @@ async def enter_username(
         )
         return
 
+    # ─── Check for duplicate ───
+    existing = await channel_repo.get_channel_by_username(session, username)
+    if existing:
+        await message.answer(
+            "⚠️ " + (
+                f"@{username} allaqachon ro'yxatda mavjud!"
+                if lang == "uz" else
+                f"@{username} уже добавлен в систему!"
+            ),
+            parse_mode="HTML",
+        )
+        await state.clear()
+        return
+
     # ─── Auto-fetch subscriber count ───
     try:
         member_count = await bot.get_chat_member_count(chat.id)
@@ -180,11 +194,13 @@ async def enter_username(
         member_count = 0
 
     channel_title = chat.title or username
+    avg_views = max(int(member_count * 0.3), 0)  # estimate ~30% of subs
 
     await state.update_data(
         channel_username=username,
         channel_title=channel_title,
         subscribers_count=member_count,
+        avg_views=avg_views,
         chat_id=chat.id,
     )
 
@@ -293,17 +309,17 @@ async def reg_select_district(
     await callback.answer()
 
 
-# ─── Step 5: Select category → skip to views (subs auto-fetched) ───
+# ─── Step 5: Select category → skip to description (subs & views auto) ───
 @router.callback_query(F.data.startswith("cat:"), ChannelRegStates.select_category)
 async def reg_select_category(
     callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
 ):
     category_id = int(callback.data.split(":")[1])
     await state.update_data(category_id=category_id)
-    await state.set_state(ChannelRegStates.enter_views)
+    await state.set_state(ChannelRegStates.enter_description)
 
     await callback.message.edit_text(
-        get_text("owner.enter_views", lang), parse_mode="HTML"
+        get_text("owner.enter_description", lang), parse_mode="HTML"
     )
     await callback.answer()
 
