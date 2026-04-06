@@ -7,7 +7,7 @@ TEXTS = {
     "menu.search": "🔍 بحث",
     "menu.my_orders": "📋 طلباتي",
     "menu.my_channels": "📺 قنواتي/مجموعاتي",
-    "menu.settings": "⚙️ الإعدادات",
+    "menu.settings": "🌐 تغيير اللغة",
     "menu.about": "ℹ️ حول",
     "menu.referral": "👥 دعوة الأصدقاء",
     "menu.bulk_order": "📦 طلب جماعي",

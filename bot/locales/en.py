@@ -17,7 +17,7 @@ TEXTS = {
     "menu.search": "🔍 Search",
     "menu.my_orders": "📋 My Orders",
     "menu.my_channels": "📺 My Channels/Groups",
-    "menu.settings": "⚙️ Settings",
+    "menu.settings": "🌐 Change Language",
     "menu.about": "ℹ️ About",
     "menu.referral": "👥 Invite Friends",
     "menu.bulk_order": "📦 Bulk Order",

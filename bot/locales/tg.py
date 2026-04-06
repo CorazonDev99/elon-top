@@ -7,7 +7,7 @@ TEXTS = {
     "menu.search": "🔍 Ҷустуҷӯ",
     "menu.my_orders": "📋 Фармоишҳои ман",
     "menu.my_channels": "📺 Каналҳо/Гурӯҳҳоям",
-    "menu.settings": "⚙️ Танзимот",
+    "menu.settings": "🌐 Иваз кардани забон",
     "menu.about": "ℹ️ Дар бораи бот",
     "menu.referral": "👥 Дӯстонро даъват кунед",
     "menu.bulk_order": "📦 Фармоиши якҷоя",

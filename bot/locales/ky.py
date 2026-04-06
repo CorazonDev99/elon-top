@@ -7,7 +7,7 @@ TEXTS = {
     "menu.search": "🔍 Издөө",
     "menu.my_orders": "📋 Менин буйрутмаларым",
     "menu.my_channels": "📺 Каналдарым/Топторум",
-    "menu.settings": "⚙️ Жөндөөлөр",
+    "menu.settings": "🌐 Тилди өзгөртүү",
     "menu.about": "ℹ️ Бот жөнүндө",
     "menu.referral": "👥 Досторду чакыруу",
     "menu.bulk_order": "📦 Топтук буйрутма",

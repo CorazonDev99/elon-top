@@ -18,7 +18,7 @@ TEXTS = {
     "menu.search": "🔍 Поиск",
     "menu.my_orders": "📋 Мои заказы",
     "menu.my_channels": "📺 Каналы/Группы",
-    "menu.settings": "⚙️ Настройки",
+    "menu.settings": "🌐 Сменить язык",
     "menu.about": "ℹ️ О боте",
     "menu.referral": "👥 Пригласить друзей",
     "menu.bulk_order": "📦 Пакетный заказ",

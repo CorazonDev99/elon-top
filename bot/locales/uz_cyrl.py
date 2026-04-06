@@ -17,7 +17,7 @@ TEXTS = {
     "menu.search": "🔍 Қидириш",
     "menu.my_orders": "📋 Менинг буюртмаларим",
     "menu.my_channels": "📺 Канал/Гуруҳларим",
-    "menu.settings": "⚙️ Созламалар",
+    "menu.settings": "🌐 Тилни ўзгартириш",
     "menu.about": "ℹ️ Бот ҳақида",
     "menu.referral": "👥 Дўстларни таклиф қилиш",
     "menu.bulk_order": "📦 Пакет буюртма",

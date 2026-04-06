@@ -18,7 +18,7 @@ TEXTS = {
     "menu.search": "🔍 Qidirish",
     "menu.my_orders": "📋 Mening buyurtmalarim",
     "menu.my_channels": "📺 Kanal/Guruhlarim",
-    "menu.settings": "⚙️ Sozlamalar",
+    "menu.settings": "🌐 Tilni o'zgartirish",
     "menu.about": "ℹ️ Bot haqida",
     "menu.referral": "👥 Do'stlarni taklif qilish",
     "menu.bulk_order": "📦 Paket buyurtma",

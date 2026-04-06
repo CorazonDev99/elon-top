@@ -7,7 +7,7 @@ TEXTS = {
     "menu.search": "🔍 खोजें",
     "menu.my_orders": "📋 मेरे ऑर्डर",
     "menu.my_channels": "📺 मेरे चैनल/ग्रुप",
-    "menu.settings": "⚙️ सेटिंग्स",
+    "menu.settings": "🌐 भाषा बदलें",
     "menu.about": "ℹ️ के बारे में",
     "menu.referral": "👥 दोस्तों को आमंत्रित करें",
     "menu.bulk_order": "📦 बल्क ऑर्डर",
