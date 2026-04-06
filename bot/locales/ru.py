@@ -17,7 +17,7 @@ TEXTS = {
     "menu.browse": "📢 Разместить рекламу",
     "menu.search": "🔍 Поиск",
     "menu.my_orders": "📋 Мои заказы",
-    "menu.my_channels": "📺 Каналы/Группы",
+    "menu.my_channels": "📺 Мои каналы и группы",
     "menu.settings": "🌐 Сменить язык",
     "menu.about": "ℹ️ О боте",
     "menu.referral": "👥 Пригласить друзей",
@@ -37,7 +37,7 @@ TEXTS = {
     "browse.select_district": "📍 <b>{region} — Выберите район:</b>",
     "browse.select_category": "📂 <b>Выберите категорию:</b>",
     "browse.no_channels": "😔 Пока здесь нет каналов/групп.\n\nСкоро появятся!",
-    "browse.channels_list": "📺 <b>Каналы/группы: {district}</b>\n\nВсего: {count}",
+    "browse.channels_list": "📺 <b>Каналы и группы: {district}</b>\n\nВсего: {count}",
     "browse.all_categories": "📂 Все категории",
 
     # ─── Channel Card ───
@@ -134,16 +134,16 @@ TEXTS = {
     "payment.rejected": "❌ Оплата отклонена. Свяжитесь с админом.",
 
     # ─── Channel Owner ───
-    "owner.panel": "📺 <b>Мои каналы/группы:</b>",
+    "owner.panel": "📺 <b>Мои каналы и группы:</b>",
     "owner.no_channels": (
-        "📭 У вас пока нет каналов/групп.\n\n"
+        "📭 У вас пока нет каналов и групп.\n\n"
         "Добавьте канал или группу и начните принимать заказы!"
     ),
-    "owner.add_channel": "➕ Добавить канал/группу",
+    "owner.add_channel": "➕ Добавить канал или группу",
     "owner.enter_username": (
         "📝 <b>Введите username канала или группы:</b>\n\n"
         "Например: <code>@my_channel</code> или <code>@my_group</code>\n\n"
-        "⚠️ Бот должен быть администратором канала/группы!"
+        "⚠️ Бот должен быть администратором канала или группы!"
     ),
     "owner.select_region": "📍 <b>Выберите область:</b>",
     "owner.select_district": "📍 <b>Выберите район:</b>",

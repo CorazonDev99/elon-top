@@ -17,7 +17,7 @@ TEXTS = {
     "menu.browse": "📢 Reklama joylashtirish",
     "menu.search": "🔍 Qidirish",
     "menu.my_orders": "📋 Mening buyurtmalarim",
-    "menu.my_channels": "📺 Kanal/Guruhlarim",
+    "menu.my_channels": "📺 Kanallarim va Guruhlarim",
     "menu.settings": "🌐 Tilni o'zgartirish",
     "menu.about": "ℹ️ Bot haqida",
     "menu.referral": "👥 Do'stlarni taklif qilish",
@@ -134,18 +134,18 @@ TEXTS = {
     "payment.rejected": "❌ To'lov rad etildi. Iltimos, admin bilan bog'laning.",
 
     # ─── Channel Owner ───
-    "owner.panel": "📺 <b>Mening kanal/guruhlarim:</b>",
+    "owner.panel": "📺 <b>Mening kanallarim va guruhlarim:</b>",
     "owner.no_channels": (
-        "📭 Sizda hali kanal/guruhlar yo'q.\n\n"
+        "📭 Sizda hali kanal yoki guruh yo'q.\n\n"
         "Kanalingizni qo'shing va reklama buyurtmalarini qabul qiling!"
     ),
-    "owner.add_channel": "➕ Kanal/Guruh qo'shish",
+    "owner.add_channel": "➕ Kanal yoki guruh qo'shish",
     "owner.enter_username": (
         "📝 <b>Kanal yoki guruh username kiriting:</b>\n\n"
         "Masalan: <code>@my_channel</code> yoki <code>@my_group</code>\n\n"
-        "⚠️ Bot kanal/guruh adminlari ro'yxatida bo'lishi kerak!"
+        "⚠️ Bot kanal yoki guruh adminlari ro'yxatida bo'lishi kerak!"
     ),
-    "owner.select_region": "📍 <b>Kanal/guruh joylashgan viloyatni tanlang:</b>",
+    "owner.select_region": "📍 <b>Viloyatni tanlang:</b>",
     "owner.select_district": "📍 <b>Tumanni tanlang:</b>",
     "owner.select_category": "📂 <b>Kategoriyani tanlang:</b>",
     "owner.enter_subscribers": (
