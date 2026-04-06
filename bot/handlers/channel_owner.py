@@ -196,12 +196,26 @@ async def enter_username(
     channel_title = chat.title or username
     avg_views = max(int(member_count * 0.3), 0)  # estimate ~30% of subs
 
+    # Detect type: channel or group
+    is_group = chat.type in ("group", "supergroup")
+    type_label = ("guruh" if lang == "uz" else "группа") if is_group else ("kanal" if lang == "uz" else "канал")
+    type_emoji = "👥" if is_group else "📺"
+
     await state.update_data(
         channel_username=username,
         channel_title=channel_title,
         subscribers_count=member_count,
         avg_views=avg_views,
         chat_id=chat.id,
+        is_group=is_group,
+    )
+
+    info_text = (
+        f"✅ {type_emoji} <b>{channel_title}</b> topildi!\n"
+        f"📊 {member_count} ta a'zo | {type_label.capitalize()}\n\n"
+        if lang == "uz" else
+        f"✅ {type_emoji} <b>{channel_title}</b> найден(а)!\n"
+        f"📊 {member_count} участн. | {type_label.capitalize()}\n\n"
     )
 
     # Check if user already has card number
@@ -211,22 +225,14 @@ async def enter_username(
         await state.set_state(ChannelRegStates.select_region)
         regions = await region_repo.get_all_regions(session)
         await message.answer(
-            "✅ " + (
-                f"<b>{channel_title}</b> topildi! ({member_count} ta a'zo)\n\n"
-                if lang == "uz" else
-                f"<b>{channel_title}</b> найден! ({member_count} участн.)\n\n"
-            ) + get_text("owner.select_region", lang),
+            info_text + get_text("owner.select_region", lang),
             reply_markup=regions_kb(regions, lang),
             parse_mode="HTML",
         )
     else:
         await state.set_state(ChannelRegStates.enter_card_number)
         await message.answer(
-            "✅ " + (
-                f"<b>{channel_title}</b> topildi! ({member_count} ta a'zo)\n\n"
-                if lang == "uz" else
-                f"<b>{channel_title}</b> найден! ({member_count} участн.)\n\n"
-            ) + get_text("owner.enter_card", lang),
+            info_text + get_text("owner.enter_card", lang),
             reply_markup=cancel_kb(lang),
             parse_mode="HTML",
         )
@@ -427,11 +433,16 @@ async def set_price(
         await state.update_data(prices=prices)
         data = await state.get_data()
 
+        is_group = data.get("is_group", False)
+        type_word_uz = "Guruh" if is_group else "Kanal"
+        type_word_ru = "Группа" if is_group else "Канал"
+        type_emoji = "👥" if is_group else "📺"
+
         channel = await channel_repo.create_channel(
             session=session,
             owner_telegram_id=message.from_user.id,
             channel_username=data["channel_username"],
-            channel_title=data["channel_username"],
+            channel_title=data["channel_title"],
             district_id=data["district_id"],
             category_id=data["category_id"],
             subscribers_count=data["subscribers_count"],
@@ -442,29 +453,35 @@ async def set_price(
 
         await state.clear()
 
+        added_text = (
+            f"✅ <b>{type_word_uz} qo'shildi!</b>\n\n"
+            f"{type_emoji} {channel.channel_title} (@{channel.channel_username})\n\n"
+            f"Moderatsiyaga yuborildi ⏳"
+            if lang == "uz" else
+            f"✅ <b>{type_word_ru} добавлен(а)!</b>\n\n"
+            f"{type_emoji} {channel.channel_title} (@{channel.channel_username})\n\n"
+            f"Отправлено на модерацию ⏳"
+        )
+
         await message.answer(
-            get_text(
-                "owner.channel_added",
-                lang,
-                title=channel.channel_title,
-                username=channel.channel_username,
-            ),
+            added_text,
             reply_markup=main_menu_kb(lang),
             parse_mode="HTML",
         )
 
-        # Notify admins about new channel for moderation
+        # Notify admins about new channel/group for moderation
         from bot.config import settings
         from bot.keyboards.admin import moderate_channel_kb
 
+        type_admin = "guruh" if is_group else "kanal"
         for admin_id in settings.admin_ids:
             try:
                 await message.bot.send_message(
                     chat_id=admin_id,
                     text=(
-                        f"🆕 Yangi kanal moderatsiya uchun:\n\n"
-                        f"📺 @{channel.channel_username}\n"
-                        f"👥 {channel.subscribers_count} obunachi\n"
+                        f"🆕 Yangi {type_admin} moderatsiya uchun:\n\n"
+                        f"{type_emoji} @{channel.channel_username}\n"
+                        f"👥 {channel.subscribers_count} a'zo\n"
                         f"👤 Egasi: {message.from_user.full_name}"
                     ),
                     reply_markup=moderate_channel_kb(channel.id),
