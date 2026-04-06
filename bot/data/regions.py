@@ -325,33 +325,21 @@ CATEGORIES_DATA = [
 # Форматы рекламы
 AD_FORMATS_DATA = [
     {
-        "name_uz": "1/24",
-        "name_ru": "1/24",
-        "description_uz": "Post 24 soat turib, keyin o'chiriladi",
-        "description_ru": "Пост на 24 часа, затем удаляется",
+        "name_uz": "📅 1 kunga",
+        "name_ru": "📅 На 1 день",
+        "description_uz": "Reklama 1 kun davomida joylashtiriladi",
+        "description_ru": "Реклама размещается на 1 день",
     },
     {
-        "name_uz": "2/48",
-        "name_ru": "2/48",
-        "description_uz": "Post 48 soat turib, keyin o'chiriladi",
-        "description_ru": "Пост на 48 часов, затем удаляется",
+        "name_uz": "📆 1 haftalik",
+        "name_ru": "📆 На неделю",
+        "description_uz": "Reklama har kuni 7 kun davomida joylashtiriladi",
+        "description_ru": "Реклама каждый день в течение 7 дней",
     },
     {
-        "name_uz": "O'chirilmaydi",
-        "name_ru": "Без удаления",
-        "description_uz": "Post doimiy qoladi",
-        "description_ru": "Пост остаётся навсегда",
-    },
-    {
-        "name_uz": "Repost",
-        "name_ru": "Репост",
-        "description_uz": "Kanalga repost qilinadi",
-        "description_ru": "Репост в канал",
-    },
-    {
-        "name_uz": "Biriktirish",
-        "name_ru": "Закреп",
-        "description_uz": "Post biriktiriladi (pin)",
-        "description_ru": "Закреплённый пост",
+        "name_uz": "🗓 1 oylik",
+        "name_ru": "🗓 На месяц",
+        "description_uz": "Reklama har kuni 30 kun davomida joylashtiriladi",
+        "description_ru": "Реклама каждый день в течение 30 дней",
     },
 ]
