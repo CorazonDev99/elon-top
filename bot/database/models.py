@@ -94,7 +94,8 @@ class Channel(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     owner_telegram_id = Column(BigInteger, ForeignKey("users.telegram_id"), nullable=False)
-    district_id = Column(Integer, ForeignKey("districts.id"), nullable=False)
+    district_id = Column(Integer, ForeignKey("districts.id"), nullable=True)  # NULL = whole region/country
+    region_id = Column(Integer, ForeignKey("regions.id"), nullable=True)  # for region-level assignment
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     channel_username = Column(String(255), nullable=False)
     channel_title = Column(String(255), nullable=False)

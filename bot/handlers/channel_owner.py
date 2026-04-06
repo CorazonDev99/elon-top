@@ -270,7 +270,31 @@ async def reg_select_region(
     lang: str = "uz",
     **kwargs,
 ):
-    region_id = int(callback.data.split(":")[1])
+    region_val = callback.data.split(":")[1]
+
+    if region_val == "all":
+        # All of Uzbekistan — skip district selection
+        await state.update_data(region_id=None, district_id=None)
+
+        # Go straight to categories
+        categories = await channel_repo.get_categories(session)
+        from bot.utils.pagination import paginate_buttons
+        items = [
+            (f"{c.emoji} {c.name_uz if lang == 'uz' else c.name_ru}", f"cat:{c.id}")
+            for c in categories
+        ]
+        kb = paginate_buttons(items, columns=2, per_page=10)
+
+        await state.set_state(ChannelRegStates.select_category)
+        await callback.message.edit_text(
+            get_text("owner.select_category", lang),
+            reply_markup=kb,
+            parse_mode="HTML",
+        )
+        await callback.answer()
+        return
+
+    region_id = int(region_val)
     await state.update_data(region_id=region_id)
 
     districts = await region_repo.get_districts_by_region(session, region_id)
@@ -293,8 +317,14 @@ async def reg_select_district(
     lang: str = "uz",
     **kwargs,
 ):
-    district_id = int(callback.data.split(":")[1])
-    await state.update_data(district_id=district_id)
+    district_val = callback.data.split(":")[1]
+
+    if district_val.startswith("all_"):
+        # Entire region — no specific district
+        await state.update_data(district_id=None)
+    else:
+        district_id = int(district_val)
+        await state.update_data(district_id=district_id)
 
     # Show categories
     categories = await channel_repo.get_categories(session)
@@ -304,7 +334,7 @@ async def reg_select_district(
         (f"{c.emoji} {c.name_uz if lang == 'uz' else c.name_ru}", f"cat:{c.id}")
         for c in categories
     ]
-    kb = paginate_buttons(items, columns=2, per_page=10 )
+    kb = paginate_buttons(items, columns=2, per_page=10)
 
     await state.set_state(ChannelRegStates.select_category)
     await callback.message.edit_text(
@@ -450,6 +480,7 @@ async def set_price(
             description=data["description"],
             prices={int(k): v for k, v in data["prices"].items()},
             is_group=data.get("is_group", False),
+            region_id=data.get("region_id"),
         )
 
         await state.clear()

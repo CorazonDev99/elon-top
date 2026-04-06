@@ -9,6 +9,11 @@ from aiogram.types import InlineKeyboardMarkup
 
 def regions_kb(regions: list[Region], lang: str = "uz", page: int = 1) -> InlineKeyboardMarkup:
     items = []
+
+    # "All of Uzbekistan" option at the top
+    all_label = "🇺🇿 Butun O'zbekiston" if lang == "uz" else "🇺🇿 Вся Республика"
+    items.append((all_label, "region:all"))
+
     for r in regions:
         name = r.name_uz if lang == "uz" else r.name_ru
         items.append((f"{r.emoji} {name}", f"region:{r.id}"))
@@ -29,6 +34,11 @@ def districts_kb(
     page: int = 1,
 ) -> InlineKeyboardMarkup:
     items = []
+
+    # "Entire region" option at the top
+    all_label = "📍 Butun viloyat" if lang == "uz" else "📍 Весь регион"
+    items.append((all_label, f"district:all_{region_id}"))
+
     for d in districts:
         name = d.name_uz if lang == "uz" else d.name_ru
         items.append((f"📍 {name}", f"district:{d.id}"))

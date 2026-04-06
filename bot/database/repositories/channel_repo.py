@@ -63,6 +63,48 @@ async def get_channels_by_district(
     return list(result.scalars().all())
 
 
+async def get_channels_by_region(
+    session: AsyncSession, region_id: int
+) -> list[Channel]:
+    """Get all active+verified channels in a region (all districts)."""
+    from bot.database.models import District
+
+    result = await session.execute(
+        select(Channel)
+        .join(District, Channel.district_id == District.id)
+        .where(
+            District.region_id == region_id,
+            Channel.is_active == True,
+            Channel.is_verified == True,
+        )
+        .options(
+            selectinload(Channel.category),
+            selectinload(Channel.pricing).selectinload(ChannelPricing.ad_format),
+            selectinload(Channel.district),
+        )
+        .order_by(Channel.subscribers_count.desc())
+    )
+    return list(result.scalars().all())
+
+
+async def get_all_active_channels(session: AsyncSession) -> list[Channel]:
+    """Get all active+verified channels in the system."""
+    result = await session.execute(
+        select(Channel)
+        .where(
+            Channel.is_active == True,
+            Channel.is_verified == True,
+        )
+        .options(
+            selectinload(Channel.category),
+            selectinload(Channel.pricing).selectinload(ChannelPricing.ad_format),
+            selectinload(Channel.district),
+        )
+        .order_by(Channel.subscribers_count.desc())
+    )
+    return list(result.scalars().all())
+
+
 async def get_channel(session: AsyncSession, channel_id: int) -> Channel | None:
     from bot.database.models import District
 
@@ -116,19 +158,21 @@ async def create_channel(
     owner_telegram_id: int,
     channel_username: str,
     channel_title: str,
-    district_id: int,
+    district_id: int | None,
     category_id: int,
     subscribers_count: int,
     avg_views: int,
     description: str,
     prices: dict[int, int],  # {ad_format_id: price}
     is_group: bool = False,
+    region_id: int | None = None,
 ) -> Channel:
     channel = Channel(
         owner_telegram_id=owner_telegram_id,
         channel_username=channel_username,
         channel_title=channel_title,
         district_id=district_id,
+        region_id=region_id,
         category_id=category_id,
         subscribers_count=subscribers_count,
         avg_views=avg_views,

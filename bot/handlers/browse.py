@@ -41,10 +41,19 @@ async def region_page(callback: CallbackQuery, session: AsyncSession, lang: str 
     await callback.answer()
 
 
-# ─── Select region → show districts ───
+# ─── Select region → show districts (or all channels) ───
 @router.callback_query(F.data.startswith("region:"))
 async def select_region(callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs):
-    region_id = int(callback.data.split(":")[1])
+    region_val = callback.data.split(":")[1]
+
+    if region_val == "all":
+        # Show ALL channels in the country
+        channels = await channel_repo.get_all_active_channels(session)
+        label = "O'zbekiston" if lang == "uz" else "Узбекистан"
+        await _show_channels_list(callback, session, channels, label, lang, back_data="browse:back_to_regions")
+        return
+
+    region_id = int(region_val)
     region = await region_repo.get_region(session, region_id)
     districts = await region_repo.get_districts_by_region(session, region_id)
 
@@ -81,8 +90,63 @@ async def district_page(callback: CallbackQuery, session: AsyncSession, lang: st
 # ─── Select district → show channels ───
 @router.callback_query(F.data.startswith("district:"))
 async def select_district(callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs):
-    district_id = int(callback.data.split(":")[1])
+    district_val = callback.data.split(":")[1]
+
+    if district_val.startswith("all_"):
+        # Show all channels in this region
+        region_id = int(district_val.split("_")[1])
+        channels = await channel_repo.get_channels_by_region(session, region_id)
+        region = await region_repo.get_region(session, region_id)
+        label = region.name_uz if lang == "uz" else region.name_ru
+        await _show_channels_list(callback, session, channels, label, lang, back_data="browse:back_to_regions")
+        return
+
+    district_id = int(district_val)
     await _show_channels(callback, session, district_id, lang)
+
+
+async def _show_channels_list(
+    callback: CallbackQuery,
+    session: AsyncSession,
+    channels: list,
+    area_name: str,
+    lang: str,
+    back_data: str = "browse:back_to_regions",
+    page: int = 1,
+):
+    """Show channels from a list (used for region-wide / country-wide views)."""
+    if not channels:
+        from aiogram.utils.keyboard import InlineKeyboardBuilder
+        builder = InlineKeyboardBuilder()
+        builder.button(text=get_text("menu.back", lang), callback_data=back_data)
+        builder.adjust(1)
+        await callback.message.edit_text(
+            get_text("browse.no_channels", lang),
+            reply_markup=builder.as_markup(),
+            parse_mode="HTML",
+        )
+    else:
+        from bot.utils.pagination import paginate_buttons
+        items = []
+        for ch in channels:
+            subs = ch.subscribers_count
+            subs_str = f"{subs / 1000:.1f}K" if subs >= 1000 else str(subs)
+            items.append((f"📺 {ch.channel_title} ({subs_str})", f"channel:{ch.id}"))
+
+        kb = paginate_buttons(
+            items=items,
+            page=page,
+            per_page=6,
+            columns=1,
+            nav_prefix="ch_all_page",
+            back_btn=(get_text("menu.back", lang), back_data),
+        )
+        await callback.message.edit_text(
+            get_text("browse.channels_list", lang, district=area_name, count=len(channels)),
+            reply_markup=kb,
+            parse_mode="HTML",
+        )
+    await callback.answer()
 
 
 async def _show_channels(
@@ -169,8 +233,12 @@ async def _show_channel_detail(callback: CallbackQuery, session: AsyncSession, c
     if not pricing_text:
         pricing_text = "—"
 
-    district_name = channel.district.name_uz if lang == "uz" else channel.district.name_ru
-    region_name = channel.district.region.name_uz if lang == "uz" else channel.district.region.name_ru
+    if channel.district:
+        district_name = channel.district.name_uz if lang == "uz" else channel.district.name_ru
+        region_name = channel.district.region.name_uz if lang == "uz" else channel.district.region.name_ru
+    else:
+        district_name = "Butun viloyat" if lang == "uz" else "Весь регион"
+        region_name = "O'zbekiston" if lang == "uz" else "Узбекистан"
     cat_name = channel.category.name_uz if lang == "uz" else channel.category.name_ru
     verified = get_text("channel.verified" if channel.is_verified else "channel.not_verified", lang)
 
