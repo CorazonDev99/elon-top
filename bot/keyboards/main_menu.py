@@ -13,15 +13,11 @@ def main_menu_kb(lang: str = "uz") -> ReplyKeyboardMarkup:
                 KeyboardButton(text=get_text("menu.search", lang)),
             ],
             [
-                KeyboardButton(text=get_text("menu.bulk_order", lang)),
-                KeyboardButton(text=get_text("menu.subscriptions", lang)),
-            ],
-            [
                 KeyboardButton(text=get_text("menu.my_orders", lang)),
                 KeyboardButton(text=get_text("menu.my_channels", lang)),
             ],
             [
-                KeyboardButton(text=get_text("menu.referral", lang)),
+                KeyboardButton(text=get_text("menu.bulk_order", lang)),
                 KeyboardButton(text=get_text("menu.settings", lang)),
             ],
             [

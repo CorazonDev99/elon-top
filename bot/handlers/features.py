@@ -1,7 +1,6 @@
 """
 Features handler:
 - Bulk (package) orders — select multiple channels
-- Subscriptions — weekly auto-ad
 - Terms acceptance
 """
 
@@ -16,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from bot.locales.i18n import get_text, menu_match
 from bot.keyboards.main_menu import main_menu_kb, cancel_kb
-from bot.database.repositories import channel_repo, order_repo, subscription_repo, user_repo
+from bot.database.repositories import channel_repo, order_repo, user_repo
 from bot.utils.formatting import format_price
 from bot.config import settings
 
@@ -244,127 +243,6 @@ async def bulk_done_selecting(
     await callback.message.answer(
         get_text("order.enter_text", lang),
         reply_markup=cancel_kb(lang),
-        parse_mode="HTML",
-    )
-    await callback.answer()
-
-
-# ═══════════════════════════════════════════════
-# SUBSCRIPTIONS
-# ═══════════════════════════════════════════════
-
-@router.message(F.text.in_(menu_match("menu.subscriptions")))
-async def show_subscriptions(
-    message: Message, session: AsyncSession, lang: str = "uz", **kwargs
-):
-    subs = await subscription_repo.get_user_subscriptions(session, message.from_user.id)
-
-    if not subs:
-        text = get_text("sub.empty", lang)
-    else:
-        text = get_text("sub.title", lang) + "\n\n"
-        for s in subs:
-            status = "✅" if s.is_active else "⏸"
-            ch_name = s.channel.channel_title if s.channel else "—"
-            freq_name = {"weekly": "📅 Haftalik", "biweekly": "📅 2 haftalik", "monthly": "📅 Oylik"}.get(
-                s.frequency, s.frequency
-            ) if lang == "uz" else {"weekly": "📅 Еженедельно", "biweekly": "📅 Раз в 2 недели", "monthly": "📅 Ежемесячно"}.get(
-                s.frequency, s.frequency
-            )
-            text += (
-                f"{status} <b>{ch_name}</b>\n"
-                f"   {freq_name} • {format_price(s.price_per_post)} so'm\n"
-                f"   Jami postlar: {s.total_posts}\n\n"
-            )
-
-    builder = InlineKeyboardBuilder()
-    for s in (subs or []):
-        if s.is_active:
-            builder.button(
-                text=f"⏸ {s.channel.channel_title}" if s.channel else f"⏸ #{s.id}",
-                callback_data=f"sub:cancel:{s.id}",
-            )
-    builder.adjust(1)
-
-    await message.answer(
-        text,
-        reply_markup=builder.as_markup() if subs else None,
-        parse_mode="HTML",
-    )
-
-
-@router.callback_query(F.data.startswith("sub:cancel:"))
-async def cancel_sub(
-    callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
-):
-    sub_id = int(callback.data.split(":")[2])
-    await subscription_repo.cancel_subscription(session, sub_id)
-    await callback.message.edit_text(
-        "✅ " + ("Obuna bekor qilindi." if lang == "uz" else "Подписка отменена."),
-        parse_mode="HTML",
-    )
-    await callback.answer()
-
-
-@router.callback_query(F.data.startswith("sub:create:"))
-async def create_sub_from_order(
-    callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
-):
-    """Create subscription from a completed order."""
-    order_id = int(callback.data.split(":")[2])
-    order = await order_repo.get_order(session, order_id)
-    if not order:
-        await callback.answer("Order not found", show_alert=True)
-        return
-
-    freq_builder = InlineKeyboardBuilder()
-    freq_builder.button(text="📅 Haftalik" if lang == "uz" else "📅 Еженедельно",
-                       callback_data=f"sub:freq:{order_id}:weekly")
-    freq_builder.button(text="📅 2 hafta" if lang == "uz" else "📅 Раз в 2 нед.",
-                       callback_data=f"sub:freq:{order_id}:biweekly")
-    freq_builder.button(text="📅 Oylik" if lang == "uz" else "📅 Ежемесячно",
-                       callback_data=f"sub:freq:{order_id}:monthly")
-    freq_builder.adjust(3)
-
-    await callback.message.answer(
-        get_text("sub.select_frequency", lang),
-        reply_markup=freq_builder.as_markup(),
-        parse_mode="HTML",
-    )
-    await callback.answer()
-
-
-@router.callback_query(F.data.startswith("sub:freq:"))
-async def set_sub_frequency(
-    callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
-):
-    parts = callback.data.split(":")
-    order_id = int(parts[2])
-    frequency = parts[3]
-
-    order = await order_repo.get_order(session, order_id)
-    if not order:
-        await callback.answer("Order not found", show_alert=True)
-        return
-
-    sub = await subscription_repo.create_subscription(
-        session,
-        advertiser_tid=order.advertiser_telegram_id,
-        channel_id=order.channel_id,
-        ad_format_id=order.ad_format_id,
-        price=order.price,
-        frequency=frequency,
-        ad_text=order.ad_text,
-        ad_media_file_id=order.ad_media_file_id,
-        ad_media_type=order.ad_media_type,
-    )
-
-    freq_name = {"weekly": "haftalik", "biweekly": "2 haftalik", "monthly": "oylik"}.get(frequency, frequency)
-    if lang == "ru":
-        freq_name = {"weekly": "еженедельно", "biweekly": "раз в 2 недели", "monthly": "ежемесячно"}.get(frequency, frequency)
-
-    await callback.message.edit_text(
-        get_text("sub.created", lang, frequency=freq_name, price=format_price(order.price)),
         parse_mode="HTML",
     )
     await callback.answer()
