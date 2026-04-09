@@ -73,7 +73,7 @@ async def main():
     dp.include_router(cancel_router)  # Global cancel — MUST be first!
     dp.include_router(search_router)  # Search
     dp.include_router(extras_router)  # Rating, report, promo, repeat
-    dp.include_router(features_router)  # Bulk orders, terms
+    dp.include_router(features_router)  # Terms acceptance
     dp.include_router(channel_owner_router)
     dp.include_router(order_router)
     dp.include_router(admin_router)

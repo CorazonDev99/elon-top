@@ -21,7 +21,6 @@ TEXTS = {
     "menu.settings": "🌐 Сменить язык",
     "menu.about": "ℹ️ О боте",
     "menu.referral": "👥 Пригласить друзей",
-    "menu.bulk_order": "📦 Пакетный заказ",
     "menu.subscriptions": "🔄 Подписки",
     "menu.language": "🌐 Сменить язык",
     "menu.back": "⬅️ Назад",
@@ -359,19 +358,6 @@ TEXTS = {
     "referral.share_btn": "📤 Поделиться с друзьями",
     "referral.copy_link": "📋 Нажмите ссылку ниже для копирования",
 
-    # ─── Bulk Orders ───
-    "bulk.select_channels": (
-        "📦 <b>Пакетный заказ</b>\n\n"
-        "Выберите каналы (2+ = скидка 15%!)\n"
-        "✅ отмеченные уже выбраны:"
-    ),
-    "bulk.summary": (
-        "📦 <b>Итого пакетного заказа</b>\n\n"
-        "📺 Каналы ({count}):\n{channels}\n\n"
-        "💰 Итого: <s>{total} сум</s>\n"
-        "🏷 Скидка (15%): -{discount} сум\n"
-        "✅ <b>Итого: {final} сум</b>"
-    ),
 
     # ─── Subscriptions ───
     "sub.empty": "🔄 У вас пока нет подписок.",
