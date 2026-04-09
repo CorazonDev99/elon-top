@@ -15,6 +15,7 @@ TEXTS = {
     "menu.back": "⬅️ वापस",
     "menu.home": "🏠 मुख्य मेनू",
     "menu.cancel": "❌ रद्द करें",
+    "menu.suggestions": "💡 सुझाव",
     "lang.select": "🌐 भाषा चुनें:",
     "lang.changed": "✅ भाषा बदल गई: हिन्दी 🇮🇳",
     "browse.select_region": "🗺 <b>क्षेत्र चुनें:</b>",
@@ -146,4 +147,7 @@ TEXTS = {
     "sub.title": "🔄 <b>आपकी सदस्यताएँ:</b>",
     "sub.select_frequency": "📅 <b>सदस्यता आवृत्ति चुनें:</b>",
     "sub.created": "✅ <b>सदस्यता बनाई!</b>\n\n📅 आवृत्ति: {frequency}\n💰 प्रति पोस्ट: {price} UZS",
+    "suggestions.enter_text": "💡 <b>अपना सुझाव लिखें:</b>\n\nहमें अपने विचार भेजें। 📝",
+    "suggestions.sent": "✅ आपका सुझाव प्राप्त हुआ! धन्यवाद! 🙏",
+    "suggestions.error": "⚠️ एक त्रुटि हुई।",
 }

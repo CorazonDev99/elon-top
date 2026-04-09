@@ -25,6 +25,7 @@ TEXTS = {
     "menu.back": "⬅️ Back",
     "menu.home": "🏠 Main Menu",
     "menu.cancel": "❌ Cancel",
+    "menu.suggestions": "💡 Suggestions",
     "lang.select": "🌐 Select language:",
     "lang.changed": "✅ Language changed: English 🇬🇧",
     "browse.select_region": "🗺 <b>Select a region:</b>",
@@ -181,4 +182,7 @@ TEXTS = {
     "sub.title": "🔄 <b>Your subscriptions:</b>",
     "sub.select_frequency": "📅 <b>Select subscription frequency:</b>\n\nAds will be placed automatically.",
     "sub.created": "✅ <b>Subscription created!</b>\n\n📅 Frequency: {frequency}\n💰 Per post: {price} UZS\n\nAds will be placed automatically.",
+    "suggestions.enter_text": "💡 <b>Write your suggestion:</b>\n\nSend us your ideas and feedback.\nWe will definitely review them! 📝",
+    "suggestions.sent": "✅ Your suggestion has been received! Thank you! 🙏",
+    "suggestions.error": "⚠️ An error occurred. Please try again.",
 }

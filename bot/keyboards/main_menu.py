@@ -18,6 +18,7 @@ def main_menu_kb(lang: str = "uz") -> ReplyKeyboardMarkup:
             ],
             [
                 KeyboardButton(text=get_text("menu.settings", lang)),
+                KeyboardButton(text=get_text("menu.suggestions", lang)),
             ],
             [
                 KeyboardButton(text=get_text("menu.about", lang)),

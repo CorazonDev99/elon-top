@@ -15,6 +15,7 @@ TEXTS = {
     "menu.back": "⬅️ Geri",
     "menu.home": "🏠 Ana Menü",
     "menu.cancel": "❌ İptal",
+    "menu.suggestions": "💡 Öneriler",
     "lang.select": "🌐 Dil seçin:",
     "lang.changed": "✅ Dil değiştirildi: Türkçe 🇹🇷",
     "browse.select_region": "🗺 <b>Bölge seçin:</b>",
@@ -146,4 +147,7 @@ TEXTS = {
     "sub.title": "🔄 <b>Abonelikleriniz:</b>",
     "sub.select_frequency": "📅 <b>Abonelik sıklığı seçin:</b>",
     "sub.created": "✅ <b>Abonelik oluşturuldu!</b>\n\n📅 Sıklık: {frequency}\n💰 Post başına: {price} UZS",
+    "suggestions.enter_text": "💡 <b>Önerinizi yazın:</b>\n\nBize fikir ve önerilerinizi gönderin. 📝",
+    "suggestions.sent": "✅ Öneriniz alındı! Teşekkürler! 🙏",
+    "suggestions.error": "⚠️ Bir hata oluştu.",
 }

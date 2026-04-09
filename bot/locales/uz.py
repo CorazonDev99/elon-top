@@ -26,6 +26,7 @@ TEXTS = {
     "menu.back": "⬅️ Orqaga",
     "menu.home": "🏠 Bosh menyu",
     "menu.cancel": "❌ Bekor qilish",
+    "menu.suggestions": "💡 Takliflar",
 
     # ─── Language ───
     "lang.select": "🌐 Tilni tanlang / Выберите язык:",
@@ -372,4 +373,13 @@ TEXTS = {
         "💰 Har bir post: {price} so'm\n\n"
         "Reklama avtomatik joylashtiriladi."
     ),
+
+    # ─── Suggestions ───
+    "suggestions.enter_text": (
+        "💡 <b>Taklifingizni yozing:</b>\n\n"
+        "Bizga o'z fikr va takliflaringizni yuboring.\n"
+        "Biz ularni albatta ko'rib chiqamiz! 📝"
+    ),
+    "suggestions.sent": "✅ Taklifingiz qabul qilindi! Rahmat! 🙏",
+    "suggestions.error": "⚠️ Xatolik yuz berdi. Qaytadan urinib ko'ring.",
 }

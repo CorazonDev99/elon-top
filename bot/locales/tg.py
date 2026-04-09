@@ -15,6 +15,7 @@ TEXTS = {
     "menu.back": "⬅️ Бозгашт",
     "menu.home": "🏠 Менюи асосӣ",
     "menu.cancel": "❌ Бекор кардан",
+    "menu.suggestions": "💡 Пешниҳодҳо",
     "lang.select": "🌐 Забонро интихоб кунед:",
     "lang.changed": "✅ Забон иваз шуд: Тоҷикӣ 🇹🇯",
     "browse.select_region": "🗺 <b>Вилоятро интихоб кунед:</b>",
@@ -146,4 +147,7 @@ TEXTS = {
     "sub.title": "🔄 <b>Обунаҳои шумо:</b>",
     "sub.select_frequency": "📅 <b>Бисёрии обунаро интихоб кунед:</b>",
     "sub.created": "✅ <b>Обуна сохта шуд!</b>\n\n📅 Бисёрӣ: {frequency}\n💰 Ҳар пост: {price} сӯм",
+    "suggestions.enter_text": "💡 <b>Пешниҳоди худро нависед:</b>\n\nФикр ва пешниҳодҳои худро фиристед. 📝",
+    "suggestions.sent": "✅ Пешниҳоди шумо қабул шуд! Раҳмат! 🙏",
+    "suggestions.error": "⚠️ Хатогӣ рӯй дод.",
 }

@@ -15,6 +15,7 @@ TEXTS = {
     "menu.back": "⬅️ رجوع",
     "menu.home": "🏠 القائمة الرئيسية",
     "menu.cancel": "❌ إلغاء",
+    "menu.suggestions": "💡 اقتراحات",
     "lang.select": "🌐 اختر اللغة:",
     "lang.changed": "✅ تم تغيير اللغة: العربية 🇸🇦",
     "browse.select_region": "🗺 <b>اختر المنطقة:</b>",
@@ -146,4 +147,7 @@ TEXTS = {
     "sub.title": "🔄 <b>اشتراكاتك:</b>",
     "sub.select_frequency": "📅 <b>اختر تكرار الاشتراك:</b>",
     "sub.created": "✅ <b>تم إنشاء الاشتراك!</b>\n\n📅 التكرار: {frequency}\n💰 لكل منشور: {price} UZS",
+    "suggestions.enter_text": "💡 <b>اكتب اقتراحك:</b>\n\nأرسل لنا أفكارك وملاحظاتك. 📝",
+    "suggestions.sent": "✅ تم استلام اقتراحك! شكراً! 🙏",
+    "suggestions.error": "⚠️ حدث خطأ.",
 }

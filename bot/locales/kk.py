@@ -15,6 +15,7 @@ TEXTS = {
     "menu.back": "⬅️ Артқа",
     "menu.home": "🏠 Басты мәзір",
     "menu.cancel": "❌ Бас тарту",
+    "menu.suggestions": "💡 Ұсыныстар",
     "lang.select": "🌐 Тілді таңдаңыз:",
     "lang.changed": "✅ Тіл өзгертілді: Қазақша 🇰🇿",
     "browse.select_region": "🗺 <b>Аймақты таңдаңыз:</b>",
@@ -146,4 +147,7 @@ TEXTS = {
     "sub.title": "🔄 <b>Жазылымдарыңыз:</b>",
     "sub.select_frequency": "📅 <b>Жазылым жиілігін таңдаңыз:</b>",
     "sub.created": "✅ <b>Жазылым жасалды!</b>\n\n📅 Жиілік: {frequency}\n💰 Пост: {price} UZS",
+    "suggestions.enter_text": "💡 <b>Ұсынысыңызды жазыңыз:</b>\n\nБізге пікіріңізді жіберіңіз. 📝",
+    "suggestions.sent": "✅ Ұсынысыңыз қабылданды! Раҳмет! 🙏",
+    "suggestions.error": "⚠️ Қате болды.",
 }
