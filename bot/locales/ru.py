@@ -408,4 +408,9 @@ TEXTS = {
     ),
     "suggestions.sent": "✅ Ваше предложение принято! Спасибо! 🙏",
     "suggestions.error": "⚠️ Произошла ошибка. Попробуйте ещё раз.",
+
+    # ─── Support Chat ───
+    "support.leave_chat": "🚪 Покинуть чат",
+    "support.message_forwarded": "✅ Ваше сообщение отправлено админу.",
+    "support.chat_ended": "ℹ️ Чат завершён. Вы вернулись в главное меню. 🏠",
 }

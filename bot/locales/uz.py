@@ -408,4 +408,9 @@ TEXTS = {
     ),
     "suggestions.sent": "✅ Taklifingiz qabul qilindi! Rahmat! 🙏",
     "suggestions.error": "⚠️ Xatolik yuz berdi. Qaytadan urinib ko'ring.",
+
+    # ─── Support Chat ───
+    "support.leave_chat": "🚪 Chatdan chiqish",
+    "support.message_forwarded": "✅ Xabaringiz adminga yuborildi.",
+    "support.chat_ended": "ℹ️ Chat tugatildi. Bosh menyuga qaytdingiz. 🏠",
 }

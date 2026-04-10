@@ -189,4 +189,9 @@ TEXTS = {
     "suggestions.enter_text": "💡 <b>Write your suggestion:</b>\n\nSend us your ideas and feedback.\nWe will definitely review them! 📝",
     "suggestions.sent": "✅ Your suggestion has been received! Thank you! 🙏",
     "suggestions.error": "⚠️ An error occurred. Please try again.",
+
+    # ─── Support Chat ───
+    "support.leave_chat": "🚪 Leave chat",
+    "support.message_forwarded": "✅ Your message was sent to admin.",
+    "support.chat_ended": "ℹ️ Chat ended. Back to main menu. 🏠",
 }
