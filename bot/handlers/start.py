@@ -156,10 +156,34 @@ async def set_language(
 
 @router.message(F.text.in_(menu_match("menu.about")))
 async def about(message: Message, lang: str = "uz", **kwargs):
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text=get_text("about.support_btn", lang),
+        callback_data="support:start",
+    )
+    builder.adjust(1)
+
     await message.answer(
         get_text("about", lang),
+        reply_markup=builder.as_markup(),
         parse_mode="HTML",
     )
+
+
+@router.callback_query(F.data == "support:start")
+async def support_start(
+    callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
+):
+    from bot.handlers.support import SupportStates
+    await state.set_state(SupportStates.waiting_message)
+    await callback.message.answer(
+        get_text("about.support_prompt", lang),
+        reply_markup=main_menu_kb(lang),
+        parse_mode="HTML",
+    )
+    await callback.answer()
 
 
 @router.message(F.text.in_(menu_match("menu.home")))

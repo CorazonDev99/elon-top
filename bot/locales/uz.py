@@ -276,13 +276,40 @@ TEXTS = {
 
     # ─── About ───
     "about": (
-        "ℹ️ <b>Oson Reklama Bot</b>\n\n"
+        "ℹ️ <b>Oson Reklama Bot</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
         "📢 O'zbekiston bo'ylab Telegram kanallarda\n"
-        "reklama joylashtirish xizmati.\n\n"
+        "reklama joylashtirish va daromad olish platformasi.\n\n"
+        "🔹 <b>Bot imkoniyatlari:</b>\n\n"
+        "📺 <b>Reklama beruvchilar uchun:</b>\n"
+        "  • 1000+ kanal va guruhlardan qidirish\n"
+        "  • Viloyat, tuman va kategoriya bo'yicha filter\n"
+        "  • Narxlarni solishtirish va eng yaxshisini tanlash\n"
+        "  • 10,000 so'mdan boshlab reklama joylashtirish\n"
+        "  • Buyurtma holati va statistikani kuzatish\n"
+        "  • Promokodlar bilan chegirma olish\n\n"
+        "📺 <b>Kanal egalari uchun:</b>\n"
+        "  • Kanalingizni bepul ro'yxatdan o'tkazing\n"
+        "  • Reklama buyurtmalarini qabul qiling\n"
+        "  • Narxlarni o'zingiz belgilang\n"
+        "  • To'lovni to'g'ridan-to'g'ri kartangizga oling\n"
+        "  • Daromad statistikasini ko'ring\n\n"
+        "🎁 <b>Qo'shimcha:</b>\n"
+        "  • Do'stlarni taklif qiling — har biri uchun 5,000 so'm bonus\n"
+        "  • 10 ta tilni qo'llab-quvvatlash\n"
+        "  • 24/7 ishlaydigan bot\n\n"
         "🤖 Bot: @oson_reklama_uz_bot\n"
         "📞 Aloqa: @C_Rosinant\n\n"
         "© 2026 Oson Reklama"
     ),
+    "about.support_btn": "📩 Qo'llab-quvvatlash",
+    "about.support_prompt": (
+        "📩 <b>Xabaringizni yozing:</b>\n\n"
+        "Savolingiz, muammo yoki taklifingizni yozing.\n"
+        "Admin tez orada javob beradi! 💬"
+    ),
+    "about.support_sent": "✅ Xabaringiz adminlarga yuborildi! Javobni kuting. 📬",
+    "about.support_error": "⚠️ Xabar yuborishda xatolik. Qaytadan urinib ko'ring.",
 
     # ─── Common ───
     "error": "⚠️ Xatolik yuz berdi. Qaytadan urinib ko'ring.",

@@ -35,6 +35,7 @@ from bot.handlers.search import router as search_router
 from bot.handlers.extras import router as extras_router
 from bot.handlers.features import router as features_router
 from bot.handlers.suggestions import router as suggestions_router
+from bot.handlers.support import router as support_router
 
 
 async def main():
@@ -76,6 +77,7 @@ async def main():
     dp.include_router(extras_router)  # Rating, report, promo, repeat
     dp.include_router(features_router)  # Terms acceptance
     dp.include_router(suggestions_router)  # Suggestions
+    dp.include_router(support_router)  # Support messages
     dp.include_router(channel_owner_router)
     dp.include_router(order_router)
     dp.include_router(admin_router)
