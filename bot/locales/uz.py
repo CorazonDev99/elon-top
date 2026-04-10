@@ -295,7 +295,6 @@ TEXTS = {
         "  • To'lovni to'g'ridan-to'g'ri kartangizga oling\n"
         "  • Daromad statistikasini ko'ring\n\n"
         "🎁 <b>Qo'shimcha:</b>\n"
-        "  • Do'stlarni taklif qiling — har biri uchun 5,000 so'm bonus\n"
         "  • 10 ta tilni qo'llab-quvvatlash\n"
         "  • 24/7 ishlaydigan bot\n\n"
         "🤖 Bot: @oson_reklama_uz_bot\n"
