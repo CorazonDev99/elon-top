@@ -587,14 +587,39 @@ async def manage_channel(
 
 @router.callback_query(F.data.startswith("owner:edit_card:"))
 async def edit_card_start(
-    callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
+    callback: CallbackQuery, session: AsyncSession, state: FSMContext, lang: str = "uz", **kwargs
 ):
     channel_id = int(callback.data.split(":")[2])
     await state.set_state(ChannelRegStates.enter_card_number)
     await state.update_data(edit_card_channel_id=channel_id)
 
+    # Get current card
+    owner = await user_repo.get_user(session, callback.from_user.id)
+    current_card = "—"
+    if owner and owner.card_number:
+        card = owner.card_number
+        current_card = " ".join([card[i:i+4] for i in range(0, len(card), 4)])
+
+    from aiogram.utils.keyboard import InlineKeyboardBuilder
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text=get_text("menu.back", lang),
+        callback_data=f"owner:channel:{channel_id}",
+    )
+
+    text = (
+        f"💳 <b>Hozirgi karta:</b>\n"
+        f"<code>{current_card}</code>\n\n"
+        f"Yangi karta raqamini kiriting yoki orqaga qayting:"
+        if lang == "uz" else
+        f"💳 <b>Текущая карта:</b>\n"
+        f"<code>{current_card}</code>\n\n"
+        f"Введите новый номер карты или вернитесь назад:"
+    )
+
     await callback.message.edit_text(
-        get_text("owner.enter_card", lang),
+        text,
+        reply_markup=builder.as_markup(),
         parse_mode="HTML",
     )
     await callback.answer()
