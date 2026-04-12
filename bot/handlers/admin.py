@@ -368,77 +368,57 @@ async def confirm_payment(
     except Exception:
         pass
 
-    # ─── AUTO-PUBLISH to channel ───
+    # ─── Send ad content to channel owner for manual publishing ───
+    from bot.keyboards.order import owner_published_kb
+
+    owner_lang = lang
+    if order.channel and order.channel.owner:
+        owner_lang = order.channel.owner.language or "uz"
+
     channel_username = order.channel.channel_username
-    published = False
 
     try:
-        chat = await callback.bot.get_chat(f"@{channel_username}")
-        bot_member = await callback.bot.get_chat_member(chat.id, callback.bot.id)
+        # Send instruction to channel owner
+        instruction_text = get_text(
+            "owner.publish_instruction",
+            owner_lang,
+            order_id=order_id,
+            channel=f"@{channel_username}",
+        )
+        await callback.message.answer(
+            instruction_text,
+            reply_markup=owner_published_kb(order_id, owner_lang),
+            parse_mode="HTML",
+        )
 
-        if bot_member.status in ("administrator", "creator"):
-            if order.ad_media_file_id:
-                media_type = order.ad_media_type or "photo"
-                if media_type == "photo":
-                    await callback.bot.send_photo(
-                        chat_id=chat.id,
-                        photo=order.ad_media_file_id,
-                        caption=order.ad_text or "",
-                        parse_mode="HTML",
-                    )
-                elif media_type == "video":
-                    await callback.bot.send_video(
-                        chat_id=chat.id,
-                        video=order.ad_media_file_id,
-                        caption=order.ad_text or "",
-                        parse_mode="HTML",
-                    )
-                elif media_type == "document":
-                    await callback.bot.send_document(
-                        chat_id=chat.id,
-                        document=order.ad_media_file_id,
-                        caption=order.ad_text or "",
-                        parse_mode="HTML",
-                    )
-            elif order.ad_text:
-                await callback.bot.send_message(
-                    chat_id=chat.id,
-                    text=order.ad_text,
-                    parse_mode="HTML",
+        # Forward the ad content to owner so they can copy/repost it
+        if order.ad_media_file_id:
+            media_type = order.ad_media_type or "photo"
+            if media_type == "photo":
+                await callback.bot.send_photo(
+                    chat_id=callback.from_user.id,
+                    photo=order.ad_media_file_id,
+                    caption=order.ad_text or "",
                 )
-
-            published = True
-            await order_repo.update_order_status(session, order_id, "published")
-
-            # Set up recurring publish schedule
-            from datetime import date as date_type, timedelta
-            duration = order.ad_format.duration_days if order.ad_format else 1
-            today = date_type.today()
-            order.publish_start_date = today
-            order.publish_end_date = today + timedelta(days=duration - 1)
-            order.last_published_at = today
-            order.publish_count = 1
-            await session.commit()
+            elif media_type == "video":
+                await callback.bot.send_video(
+                    chat_id=callback.from_user.id,
+                    video=order.ad_media_file_id,
+                    caption=order.ad_text or "",
+                )
+            elif media_type == "document":
+                await callback.bot.send_document(
+                    chat_id=callback.from_user.id,
+                    document=order.ad_media_file_id,
+                    caption=order.ad_text or "",
+                )
+        elif order.ad_text:
+            await callback.bot.send_message(
+                chat_id=callback.from_user.id,
+                text=f"📝 Reklama matni:\n\n{order.ad_text}",
+            )
     except Exception:
         pass
-
-    # Notify about publish status
-    if published:
-        await callback.message.answer(
-            f"📢 Reklama @{channel_username} kanaliga avtomatik chop etildi! ✅",
-            parse_mode="HTML",
-        )
-    else:
-        from bot.keyboards.order import owner_published_kb
-
-        await callback.message.answer(
-            (
-                f"⚠️ Bot kanalda admin emas.\n"
-                f"Iltimos, reklamani o'zingiz chop eting va tugmani bosing."
-            ),
-            reply_markup=owner_published_kb(order_id, lang),
-            parse_mode="HTML",
-        )
 
     # Notify bot admin about confirmed payment
     for admin_id in settings.admin_ids:

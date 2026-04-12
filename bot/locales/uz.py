@@ -130,7 +130,7 @@ TEXTS = {
         "Kanal egasi to'lovni tekshiradi.\n"
         "Kuting..."
     ),
-    "payment.confirmed": "✅ To'lov tasdiqlandi! Reklama tez orada chop etiladi.",
+    "payment.confirmed": "✅ To'lov tasdiqlandi! Kanal egasi reklamani kun davomida chop etadi.",
     "payment.rejected": "❌ To'lov rad etildi. Iltimos, admin bilan bog'laning.",
 
     # ─── Channel Owner ───
@@ -189,6 +189,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Buyurtma #{id} qabul qilindi! Reklama beruvchiga xabar yuborildi.",
     "owner.order_rejected": "❌ Buyurtma #{id} rad etildi.",
     "owner.mark_published": "📢 Chop etildi deb belgilash",
+    "owner.publish_instruction": (
+        "📢 <b>Reklamani chop eting!</b>\n\n"
+        "Buyurtma: <b>#{order_id}</b>\n"
+        "Kanal: <b>{channel}</b>\n\n"
+        "⬇️ Quyida reklama matni/mediasi keladi.\n"
+        "Iltimos, uni <b>kun davomida</b> kanalingizga chop eting\n"
+        "va keyin \"📢 Chop etildi\" tugmasini bosing."
+    ),
     "owner.manage_channel": (
         "📺 <b>{title}</b> (@{username})\n\n"
         "👥 {subscribers} obunachi\n"
@@ -267,6 +275,12 @@ TEXTS = {
         "✅ <b>Kanalingiz tasdiqlandi!</b>\n\n"
         "📺 {title} (@{username})\n\n"
         "Endi buyurtmalar qabul qilishingiz mumkin!"
+    ),
+    "notify.ad_published": (
+        "📢 <b>Reklama chop etildi!</b>\n\n"
+        "Buyurtma: #{order_id}\n"
+        "Kanal: {channel}\n\n"
+        "Reklama muvaffaqiyatli joylashtirildi! ✅"
     ),
     "notify.channel_rejected": (
         "❌ <b>Kanalingiz rad etildi.</b>\n\n"

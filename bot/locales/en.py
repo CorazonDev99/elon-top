@@ -91,7 +91,7 @@ TEXTS = {
     ),
     "payment.info": "💳 <b>Payment details:</b>\n\nCard number: <code>{card}</code>\nAmount: <b>{amount} UZS</b>\n\nMake payment and\nsend screenshot here 📸",
     "payment.screenshot_received": "✅ Screenshot received!\n\nChannel owner will verify.\nPlease wait...",
-    "payment.confirmed": "✅ Payment confirmed! Your ad will be published soon.",
+    "payment.confirmed": "✅ Payment confirmed! Channel owner will publish your ad within the day.",
     "payment.rejected": "❌ Payment rejected. Please contact admin.",
     "owner.panel": "📺 <b>My Channels & Groups:</b>",
     "owner.no_channels": "📭 You don't have channels or groups yet.\n\nAdd one and start receiving ad orders!",
@@ -117,6 +117,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Order #{id} accepted! Advertiser notified.",
     "owner.order_rejected": "❌ Order #{id} rejected.",
     "owner.mark_published": "📢 Mark as published",
+    "owner.publish_instruction": (
+        "📢 <b>Publish the ad!</b>\n\n"
+        "Order: <b>#{order_id}</b>\n"
+        "Channel: <b>{channel}</b>\n\n"
+        "⬇️ Ad content will follow below.\n"
+        "Please publish it on your channel <b>within the day</b>\n"
+        "and then press \"📢 Published\"."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers} subscribers\n👁 ~{views} views\n📊 Status: {status}\n\nWhat would you like to do?",
     "owner.edit_prices": "💰 Edit prices",
     "owner.toggle_active": "🔄 Toggle active",
@@ -148,6 +156,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>Your order was accepted!</b>\n\n📺 Channel: {channel}\n📝 Format: {format}\n💰 Price: {price} UZS\n\n💳 Please make payment.",
     "notify.order_rejected": "❌ <b>Your order was rejected.</b>\n\n📺 Channel: {channel}\n📝 Reason: {reason}",
     "notify.channel_approved": "✅ <b>Your channel is approved!</b>\n\n📺 {title} (@{username})\n\nYou can now receive orders!",
+    "notify.ad_published": (
+        "📢 <b>Your ad is published!</b>\n\n"
+        "Order: #{order_id}\n"
+        "Channel: {channel}\n\n"
+        "Your ad has been successfully placed! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>Your channel was rejected.</b>\n\n📺 {title} (@{username})\nReason: {reason}",
     "about": "ℹ️ <b>Oson Reklama Bot</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 Platform for placing ads and earning\nin Telegram channels across Uzbekistan.\n\n🔹 <b>Bot features:</b>\n\n📺 <b>For advertisers:</b>\n  • Search 1000+ channels and groups\n  • Filter by region, district and category\n  • Compare prices and choose the best\n  • Place ads from 10,000 UZS\n  • Track order status and stats\n  • Discounts with promo codes\n\n📺 <b>For channel owners:</b>\n  • Register your channel for free\n  • Accept ad orders\n  • Set your own prices\n  • Get paid directly to your card\n  • View income statistics\n\n🎁 <b>Extra:</b>\n  • 10 language support\n  • Bot works 24/7\n\n🤖 Bot: @oson_reklama_uz_bot\n📞 Contact: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 Support",

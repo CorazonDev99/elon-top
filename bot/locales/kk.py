@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>Тапсырыс #{id}</b>\n\n📺 Арна: <b>{channel}</b>\n📝 Пішім: <b>{format}</b>\n💰 Бағасы: <b>{price} UZS</b>\n📅 Күні: <b>{date}</b>\n📊 Күйі: {status}\n🕐 Жасалған: {created}",
     "payment.info": "💳 <b>Төлем ақпараты:</b>\n\nКарта: <code>{card}</code>\nСома: <b>{amount} UZS</b>\n\nТөлеп скриншот жіберіңіз 📸",
     "payment.screenshot_received": "✅ Скриншот қабылданды!\n\nКүтіңіз...",
-    "payment.confirmed": "✅ Төлем расталды!",
+    "payment.confirmed": "✅ Төлем расталды! Арна иесі жарнаманы күн ішінде жариялайды.",
     "payment.rejected": "❌ Төлем қабылданбады.",
     "owner.panel": "📺 <b>Арналарым және Топтарым:</b>",
     "owner.no_channels": "📭 Әзірше арна немесе топ жоқ.\n\nҚосыңыз!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Тапсырыс #{id} қабылданды!",
     "owner.order_rejected": "❌ тапсырыс #{id} қабылданбады.",
     "owner.mark_published": "📢 Жариялалды",
+    "owner.publish_instruction": (
+        "📢 <b>Жарнаманы жариялаңыз!</b>\n\n"
+        "Тапсырыс: <b>#{order_id}</b>\n"
+        "Арна: <b>{channel}</b>\n\n"
+        "⬇️ Төменде жарнама мазмұны.\n"
+        "Оны <b>күн ішінде</b> арнаңызға жариялаңыз\n"
+        "және \"📢 Жарияланды\" түймесін басыңыз."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 Күйі: {status}",
     "owner.edit_prices": "💰 Бағаларды өзгерту",
     "owner.toggle_active": "🔄 Белсенділік",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>Тапсырысыңыз қабылданды!</b>\n\n📺 Арна: {channel}\n💰 Бағасы: {price} UZS\n\n💳 Төлем жасаңыз.",
     "notify.order_rejected": "❌ <b>Тапсырысыңыз қабылданбады.</b>\n\n📺 Арна: {channel}\n📝 Себебі: {reason}",
     "notify.channel_approved": "✅ <b>Арнаңыз расталды!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>Жарнама жарияланды!</b>\n\n"
+        "Тапсырыс: #{order_id}\n"
+        "Арна: {channel}\n\n"
+        "Жарнамаңыз сәтті орналастырылды! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>Арнаңыз қабылданбады.</b>\n\n📺 {title} (@{username})\nСебебі: {reason}",
     "about": "ℹ️ <b>Oson Reklama Bot</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 Өзбекстанда Telegram арналарында\nжарнама орналастыру және табыс табу.\n\n🔹 <b>Бот мүмкіндіктері:</b>\n\n📺 <b>Жарнама берушілер үшін:</b>\n  • 1000+ арнадан іздеу\n  • Аймақ және санат фильтрі\n  • 10,000 UZS-тен жарнама\n  • Тапсырыс күйін қадағалау\n\n📺 <b>Арна иелері үшін:</b>\n  • Арнаңызды тегін тіркеңіз\n  • Тапсырыстарды қабылдаңыз\n  • Бағаларды өзіңіз белгілеңіз\n  • Төлем картаңызға\n\n🎁 <b>Қосымша:</b>\n  • 10 тіл қолдау\n  • 24/7 жұмыс істейді\n\n🤖 Бот: @oson_reklama_uz_bot\n📞 Байланыс: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 Қолдау",

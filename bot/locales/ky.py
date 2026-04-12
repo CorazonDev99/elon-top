@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>Буйрутма #{id}</b>\n\n📺 Канал: <b>{channel}</b>\n📝 Формат: <b>{format}</b>\n💰 Баасы: <b>{price} UZS</b>\n📅 Күнү: <b>{date}</b>\n📊 Абалы: {status}\n🕐 Түзүлгөн: {created}",
     "payment.info": "💳 <b>Төлөм маалыматы:</b>\n\nКарта: <code>{card}</code>\nСумма: <b>{amount} UZS</b>\n\nТөлөп скриншот жөнөтүңүз 📸",
     "payment.screenshot_received": "✅ Скриншот кабыл алынды!\n\nКүтүңүз...",
-    "payment.confirmed": "✅ Төлөм тастыкталды!",
+    "payment.confirmed": "✅ Төлөм тастыкталды! Канал ээси күн ичинде жарнаманы жарыялайт.",
     "payment.rejected": "❌ Төлөм четке кагылды.",
     "owner.panel": "📺 <b>Каналдарым жана Топторум:</b>",
     "owner.no_channels": "📭 Азырынча канал же топ жок.\n\nКошуңуз!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Буйрутма #{id} кабыл алынды!",
     "owner.order_rejected": "❌ Буйрутма #{id} четке кагылды.",
     "owner.mark_published": "📢 Жарыяланды",
+    "owner.publish_instruction": (
+        "📢 <b>Жарнаманы жарыялаңыз!</b>\n\n"
+        "Буйрутма: <b>#{order_id}</b>\n"
+        "Канал: <b>{channel}</b>\n\n"
+        "⬇️ Төмөндө жарнама мазмуну.\n"
+        "Аны <b>күн ичинде</b> каналыңызга жарыялаңыз\n"
+        "жана \"📢 Жарыяланды\" түймөсүн басыңыз."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 Абалы: {status}",
     "owner.edit_prices": "💰 Бааларды өзгөртүү",
     "owner.toggle_active": "🔄 Активдүүлүк",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>Буйрутмаңыз кабыл алынды!</b>\n\n📺 Канал: {channel}\n💰 Баасы: {price} UZS\n\n💳 Төлөм кылыңыз.",
     "notify.order_rejected": "❌ <b>Буйрутмаңыз четке кагылды.</b>\n\n📺 Канал: {channel}\n📝 Себеби: {reason}",
     "notify.channel_approved": "✅ <b>Каналыңыз тастыкталды!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>Жарнамаңыз жарыяланды!</b>\n\n"
+        "Буйрутма: #{order_id}\n"
+        "Канал: {channel}\n\n"
+        "Жарнамаңыз ийгиликтүү жайгаштырылды! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>Каналыңыз четке кагылды.</b>\n\n📺 {title} (@{username})\nСебеби: {reason}",
     "about": "ℹ️ <b>Oson Reklama Bot</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 Өзбекстанда Telegram каналдарында\nжарнама жайгаштыруу жана табыш алуу.\n\n🔹 <b>Бот мүмкүнчүлүктөрү:</b>\n\n📺 <b>Жарнама берүүчүлөр үчүн:</b>\n  • 1000+ каналдан издөө\n  • Аймак жана категория фильтри\n  • 10,000 UZS-тен жарнама\n  • Буйрутма абалын көзөмөлдөө\n\n📺 <b>Канал ээлери үчүн:</b>\n  • Каналыңызды бекер каттаңыз\n  • Буйрутмаларды кабыл алыңыз\n  • Бааларды өзүңүз белгилеңиз\n  • Төлөм картаңызга\n\n🎁 <b>Кошумча:</b>\n  • 10 тил колдоо\n  • 24/7 иштейт\n\n🤖 Бот: @oson_reklama_uz_bot\n📞 Байланыш: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 Колдоо",

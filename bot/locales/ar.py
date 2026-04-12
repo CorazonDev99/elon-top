@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>طلب #{id}</b>\n\n📺 القناة: <b>{channel}</b>\n📝 الصيغة: <b>{format}</b>\n💰 السعر: <b>{price} UZS</b>\n📅 التاريخ: <b>{date}</b>\n📊 الحالة: {status}\n🕐 الإنشاء: {created}",
     "payment.info": "💳 <b>معلومات الدفع:</b>\n\nرقم البطاقة: <code>{card}</code>\nالمبلغ: <b>{amount} UZS</b>\n\nادفع وأرسل لقطة شاشة 📸",
     "payment.screenshot_received": "✅ تم استلام لقطة الشاشة!\n\nانتظر...",
-    "payment.confirmed": "✅ تم تأكيد الدفع!",
+    "payment.confirmed": "✅ تم تأكيد الدفع! سينشر صاحب القناة الإعلان خلال اليوم.",
     "payment.rejected": "❌ تم رفض الدفع.",
     "owner.panel": "📺 <b>قنواتي ومجموعاتي:</b>",
     "owner.no_channels": "📭 لا توجد قنوات أو مجموعات بعد.\n\nأضف واحدة!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ تم قبول الطلب #{id}!",
     "owner.order_rejected": "❌ تم رفض الطلب #{id}.",
     "owner.mark_published": "📢 تم النشر",
+    "owner.publish_instruction": (
+        "📢 <b>انشر الإعلان!</b>\n\n"
+        "الطلب: <b>#{order_id}</b>\n"
+        "القناة: <b>{channel}</b>\n\n"
+        "⬇️ المحتوى الإعلاني أدناه.\n"
+        "يرجى نشره على قناتك <b>خلال اليوم</b>\n"
+        "ثم اضغط \"📢 تم النشر\"."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 الحالة: {status}",
     "owner.edit_prices": "💰 تعديل الأسعار",
     "owner.toggle_active": "🔄 تفعيل/تعطيل",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>تم قبول طلبك!</b>\n\n📺 القناة: {channel}\n💰 السعر: {price} UZS\n\n💳 قم بالدفع.",
     "notify.order_rejected": "❌ <b>تم رفض طلبك.</b>\n\n📺 القناة: {channel}\n📝 السبب: {reason}",
     "notify.channel_approved": "✅ <b>تمت الموافقة على قناتك!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>تم نشر إعلانك!</b>\n\n"
+        "الطلب: #{order_id}\n"
+        "القناة: {channel}\n\n"
+        "تم نشر إعلانك بنجاح! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>تم رفض قناتك.</b>\n\n📺 {title} (@{username})\nالسبب: {reason}",
     "about": "ℹ️ <b>بوت أوسون ريكلاما</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 منصة للإعلان والربح في\nقنوات التلغرام في أوزبكستان.\n\n🔹 <b>ميزات البوت:</b>\n\n📺 <b>للمعلنين:</b>\n  • البحث في 1000+ قناة ومجموعة\n  • فلتر حسب المنطقة والفئة\n  • إعلانات من 10,000 UZS\n  • تتبع حالة الطلب\n\n📺 <b>لأصحاب القنوات:</b>\n  • سجل قناتك مجاناً\n  • استقبل طلبات الإعلان\n  • حدد أسعارك\n  • الدفع مباشرة لبطاقتك\n\n🎁 <b>إضافي:</b>\n  • دعم 10 لغات\n  • يعمل 24/7\n\n🤖 البوت: @oson_reklama_uz_bot\n📞 التواصل: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 الدعم",

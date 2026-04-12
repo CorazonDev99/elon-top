@@ -876,10 +876,47 @@ async def mark_published(
     callback: CallbackQuery, session: AsyncSession, lang: str = "uz", **kwargs
 ):
     order_id = int(callback.data.split(":")[2])
+    order = await order_repo.get_order(session, order_id)
+
+    if not order:
+        await callback.answer("Order not found", show_alert=True)
+        return
+
     await order_repo.update_order_status(session, order_id, "published")
+
+    # Set publish tracking dates
+    from datetime import date as date_type, timedelta
+    duration = order.ad_format.duration_days if order.ad_format else 1
+    today = date_type.today()
+    order.publish_start_date = today
+    order.publish_end_date = today + timedelta(days=duration - 1)
+    order.last_published_at = today
+    order.publish_count = 1
+    await session.commit()
 
     await callback.message.edit_text(
         f"✅ Buyurtma #{order_id} chop etildi deb belgilandi.",
         parse_mode="HTML",
     )
+
+    # Notify advertiser that ad was published
+    if order and order.advertiser:
+        try:
+            adv_lang = order.advertiser.language or "uz"
+            channel_title = order.channel.channel_title if order.channel else "—"
+            from bot.locales.i18n import get_text
+            await callback.bot.send_message(
+                chat_id=order.advertiser_telegram_id,
+                text=get_text(
+                    "notify.ad_published",
+                    adv_lang,
+                    order_id=order_id,
+                    channel=channel_title,
+                ),
+                parse_mode="HTML",
+            )
+        except Exception:
+            pass
+
     await callback.answer()
+

@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>Sipariş #{id}</b>\n\n📺 Kanal: <b>{channel}</b>\n📝 Format: <b>{format}</b>\n💰 Fiyat: <b>{price} UZS</b>\n📅 Tarih: <b>{date}</b>\n📊 Durum: {status}\n🕐 Oluşturulma: {created}",
     "payment.info": "💳 <b>Ödeme bilgileri:</b>\n\nKart no: <code>{card}</code>\nTutar: <b>{amount} UZS</b>\n\nÖdeme yapıp ekran görüntüsü gönderin 📸",
     "payment.screenshot_received": "✅ Ekran görüntüsü alındı!\n\nBekleyin...",
-    "payment.confirmed": "✅ Ödeme onaylandı!",
+    "payment.confirmed": "✅ Ödeme onaylandı! Kanal sahibi reklamı gün içinde yayınlayacak.",
     "payment.rejected": "❌ Ödeme reddedildi.",
     "owner.panel": "📺 <b>Kanallarım ve Gruplarım:</b>",
     "owner.no_channels": "📭 Henüz kanalınız/grubunuz yok.\n\nEkleyin!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Sipariş #{id} kabul edildi!",
     "owner.order_rejected": "❌ Sipariş #{id} reddedildi.",
     "owner.mark_published": "📢 Yayınlandı olarak işaretle",
+    "owner.publish_instruction": (
+        "📢 <b>Reklamı yayınlayın!</b>\n\n"
+        "Sipariş: <b>#{order_id}</b>\n"
+        "Kanal: <b>{channel}</b>\n\n"
+        "⬇️ Aşağıda reklam içeriği var.\n"
+        "Lütfen <b>gün içinde</b> kanalınızda yayınlayın\n"
+        "ve \"📢 Yayınlandı\" butonuna basın."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 Durum: {status}",
     "owner.edit_prices": "💰 Fiyatları düzenle",
     "owner.toggle_active": "🔄 Aktifliği değiştir",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>Siparişiniz kabul edildi!</b>\n\n📺 Kanal: {channel}\n💰 Fiyat: {price} UZS\n\n💳 Ödeme yapın.",
     "notify.order_rejected": "❌ <b>Siparişiniz reddedildi.</b>\n\n📺 Kanal: {channel}\n📝 Sebep: {reason}",
     "notify.channel_approved": "✅ <b>Kanalınız onaylandı!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>Reklamınız yayınlandı!</b>\n\n"
+        "Sipariş: #{order_id}\n"
+        "Kanal: {channel}\n\n"
+        "Reklamınız başarıyla yerleştirildi! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>Kanalınız reddedildi.</b>\n\n📺 {title} (@{username})\nSebep: {reason}",
     "about": "ℹ️ <b>Oson Reklama Bot</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 Özbekistan genelinde Telegram kanallarında\nreklam verme ve kazanç platformu.\n\n🔹 <b>Bot özellikleri:</b>\n\n📺 <b>Reklamverenler için:</b>\n  • 1000+ kanal ve grupta arama\n  • Bölge ve kategori filtresi\n  • 10,000 UZS'den reklam\n  • Sipariş durumu takibi\n  • Promosyon kodları\n\n📺 <b>Kanal sahipleri için:</b>\n  • Kanalınızı ücretsiz kaydedin\n  • Reklam siparişlerini kabul edin\n  • Fiyatlarınızı belirleyin\n  • Ödeme doğrudan kartınıza\n\n🎁 <b>Ekstra:</b>\n  • 10 dil desteği\n  • 24/7 çalışan bot\n\n🤖 Bot: @oson_reklama_uz_bot\n📞 İletişim: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 Destek",

@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>ऑर्डर #{id}</b>\n\n📺 चैनल: <b>{channel}</b>\n📝 फ़ॉर्मेट: <b>{format}</b>\n💰 कीमत: <b>{price} UZS</b>\n📅 तारीख: <b>{date}</b>\n📊 स्थिति: {status}\n🕐 बनाया: {created}",
     "payment.info": "💳 <b>भुगतान जानकारी:</b>\n\nकार्ड: <code>{card}</code>\nराशि: <b>{amount} UZS</b>\n\nभुगतान करें और स्क्रीनशॉट भेजें 📸",
     "payment.screenshot_received": "✅ स्क्रीनशॉट प्राप्त!\n\nकृपया प्रतीक्षा करें...",
-    "payment.confirmed": "✅ भुगतान पुष्टि हुई!",
+    "payment.confirmed": "✅ भुगतान पुष्टि हुई! चैनल मालिक दिन भर में विज्ञापन प्रकाशित करेगा।",
     "payment.rejected": "❌ भुगतान अस्वीकृत।",
     "owner.panel": "📺 <b>मेरे चैनल और ग्रुप:</b>",
     "owner.no_channels": "📭 अभी कोई चैनल या ग्रुप नहीं।\n\nजोड़ें!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ ऑर्डर #{id} स्वीकृत!",
     "owner.order_rejected": "❌ ऑर्डर #{id} अस्वीकृत।",
     "owner.mark_published": "📢 प्रकाशित चिह्नित करें",
+    "owner.publish_instruction": (
+        "📢 <b>विज्ञापन प्रकाशित करें!</b>\n\n"
+        "ऑर्डर: <b>#{order_id}</b>\n"
+        "चैनल: <b>{channel}</b>\n\n"
+        "⬇️ विज्ञापन सामग्री नीचे है।\n"
+        "कृपया इसे <b>दिन भर में</b> अपने चैनल पर प्रकाशित करें\n"
+        "और फिर \"📢 प्रकाशित\" बटन दबाएं।"
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 स्थिति: {status}",
     "owner.edit_prices": "💰 कीमतें बदलें",
     "owner.toggle_active": "🔄 सक्रिय/निष्क्रिय",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>आपका ऑर्डर स्वीकृत!</b>\n\n📺 चैनल: {channel}\n💰 कीमत: {price} UZS\n\n💳 भुगतान करें।",
     "notify.order_rejected": "❌ <b>आपका ऑर्डर अस्वीकृत।</b>\n\n📺 चैनल: {channel}\n📝 कारण: {reason}",
     "notify.channel_approved": "✅ <b>आपका चैनल अनुमोदित!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>आपका विज्ञापन प्रकाशित!</b>\n\n"
+        "ऑर्डर: #{order_id}\n"
+        "चैनल: {channel}\n\n"
+        "आपका विज्ञापन सफलतापूर्वक रखा गया! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>आपका चैनल अस्वीकृत।</b>\n\n📺 {title} (@{username})\nकारण: {reason}",
     "about": "ℹ️ <b>Oson Reklama Bot</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 उज़्बेकिस्तान भर में टेलीग्राम चैनलों में\nविज्ञापन और कमाई का प्लेटफ़ॉर्म।\n\n🔹 <b>बॉट की सुविधाएँ:</b>\n\n📺 <b>विज्ञापनदाताओं के लिए:</b>\n  • 1000+ चैनलों में खोजें\n  • क्षेत्र और श्रेणी फ़िल्टर\n  • 10,000 UZS से विज्ञापन\n  • ऑर्डर स्थिति ट्रैकिंग\n\n📺 <b>चैनल मालिकों के लिए:</b>\n  • अपना चैनल मुफ़्त में रजिस्टर करें\n  • विज्ञापन ऑर्डर स्वीकारें\n  • अपनी कीमतें तय करें\n  • भुगतान सीधे आपके कार्ड पर\n\n🎁 <b>अतिरिक्त:</b>\n  • 10 भाषाओं का समर्थन\n  • 24/7 काम करता है\n\n🤖 बॉट: @oson_reklama_uz_bot\n📞 संपर्क: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 सहायता",

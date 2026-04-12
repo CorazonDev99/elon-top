@@ -56,7 +56,7 @@ TEXTS = {
     "my_orders.detail": "📋 <b>Фармоиш #{id}</b>\n\n📺 Канал: <b>{channel}</b>\n📝 Формат: <b>{format}</b>\n💰 Нарх: <b>{price} сӯм</b>\n📅 Сана: <b>{date}</b>\n📊 Ҳолат: {status}\n🕐 Сохта: {created}",
     "payment.info": "💳 <b>Маълумоти пардохт:</b>\n\nКарта: <code>{card}</code>\nМаблағ: <b>{amount} сӯм</b>\n\nПардохт кунед ва скриншот фиристед 📸",
     "payment.screenshot_received": "✅ Скриншот қабул шуд!\n\nМунтазир бошед...",
-    "payment.confirmed": "✅ Пардохт тасдиқ шуд!",
+    "payment.confirmed": "✅ Пардохт тасдиқ шуд! Соҳиби канал рекламаро дар давоми рӯз нашр мекунад.",
     "payment.rejected": "❌ Пардохт рад шуд.",
     "owner.panel": "📺 <b>Каналҳо ва гурӯҳҳои ман:</b>",
     "owner.no_channels": "📭 Шумо ҳоло канал ё гурӯҳ надоред.\n\nИлова кунед!",
@@ -82,6 +82,14 @@ TEXTS = {
     "owner.order_accepted": "✅ Фармоиш #{id} қабул шуд!",
     "owner.order_rejected": "❌ Фармоиш #{id} рад шуд.",
     "owner.mark_published": "📢 Нашр шуд",
+    "owner.publish_instruction": (
+        "📢 <b>Рекламаро нашр кунед!</b>\n\n"
+        "Фармоиш: <b>#{order_id}</b>\n"
+        "Канал: <b>{channel}</b>\n\n"
+        "⬇️ Дар пойин матни реклама меояд.\n"
+        "Лутфан, онро <b>дар давоми рӯз</b> дар каналатон нашр кунед\n"
+        "ва \"📢 Нашр шуд\" ро пушед."
+    ),
     "owner.manage_channel": "📺 <b>{title}</b> (@{username})\n\n👥 {subscribers}\n👁 ~{views}\n📊 Ҳолат: {status}",
     "owner.edit_prices": "💰 Нархҳоро иваз кардан",
     "owner.toggle_active": "🔄 Фаъолро иваз кардан",
@@ -113,6 +121,12 @@ TEXTS = {
     "notify.order_accepted": "✅ <b>Фармоиши шумо қабул шуд!</b>\n\n📺 Канал: {channel}\n💰 Нарх: {price} сӯм\n\n💳 Пардохт кунед.",
     "notify.order_rejected": "❌ <b>Фармоиш рад шуд.</b>\n\n📺 Канал: {channel}\n📝 Сабаб: {reason}",
     "notify.channel_approved": "✅ <b>Канали шумо тасдиқ шуд!</b>\n\n📺 {title} (@{username})",
+    "notify.ad_published": (
+        "📢 <b>Рекламаи шумо нашр шуд!</b>\n\n"
+        "Фармоиш: #{order_id}\n"
+        "Канал: {channel}\n\n"
+        "Рекламаи шумо бомуваффақият ҷойгир шуд! ✅"
+    ),
     "notify.channel_rejected": "❌ <b>Канали шумо рад шуд.</b>\n\n📺 {title} (@{username})\nСабаб: {reason}",
     "about": "ℹ️ <b>Осон Реклама Бот</b>\n━━━━━━━━━━━━━━━━━━━━\n\n📢 Платформаи рекламагузорӣ ва даромад дар каналҳои Телеграм дар Ӯзбекистон.\n\n🔹 <b>Имконоти бот:</b>\n\n📺 <b>Барои рекламадиҳандагон:</b>\n  • Ҷустуҷӯ дар 1000+ канал ва гурӯҳ\n  • Филтр аз рӯи вилоят ва ноҳия\n  • Аз 10,000 сӯм реклама\n  • Назорати ҳолати фармоиш\n\n📺 <b>Барои соҳибони канал:</b>\n  • Бақайдгирии канал ройгон\n  • Қабули фармоишҳо\n  • Нархҳоро худатон муайян кунед\n  • Пардохт ба картаи шумо\n\n🎁 <b>Иловагӣ:</b>\n  • Дастгирии 10 забон\n  • 24/7 кор мекунад\n\n🤖 Бот: @oson_reklama_uz_bot\n📞 Тамос: @C_Rosinant\n\n© 2026 Oson Reklama",
     "about.support_btn": "📩 Дастгирӣ",
