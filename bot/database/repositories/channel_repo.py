@@ -46,12 +46,19 @@ async def get_channel_by_username(session: AsyncSession, username: str) -> Chann
 async def get_channels_by_district(
     session: AsyncSession, district_id: int
 ) -> list[Channel]:
+    """Get channels in a specific district + channels available for all regions."""
+    from sqlalchemy import or_
+
     result = await session.execute(
         select(Channel)
         .where(
-            Channel.district_id == district_id,
             Channel.is_active == True,
             Channel.is_verified == True,
+            or_(
+                Channel.district_id == district_id,
+                # Include channels registered for ALL regions (NULL = whole country)
+                Channel.region_id.is_(None),
+            ),
         )
         .options(
             selectinload(Channel.category),
@@ -66,16 +73,22 @@ async def get_channels_by_district(
 async def get_channels_by_region(
     session: AsyncSession, region_id: int
 ) -> list[Channel]:
-    """Get all active+verified channels in a region (all districts)."""
+    """Get all active+verified channels in a region (all districts) + channels for all regions."""
     from bot.database.models import District
+    from sqlalchemy import or_
 
     result = await session.execute(
         select(Channel)
-        .join(District, Channel.district_id == District.id)
+        .outerjoin(District, Channel.district_id == District.id)
         .where(
-            District.region_id == region_id,
             Channel.is_active == True,
             Channel.is_verified == True,
+            or_(
+                District.region_id == region_id,
+                Channel.region_id == region_id,
+                # Include channels registered for ALL regions (NULL = whole country)
+                Channel.region_id.is_(None),
+            ),
         )
         .options(
             selectinload(Channel.category),
