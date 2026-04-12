@@ -193,19 +193,27 @@ async def enter_username(
         f"📊 {member_count} участн. | {type_label.capitalize()}\n\n"
     )
 
-    # Check if user already has card number
+    # Always ask for card number (required for advertiser payments)
     user = await user_repo.get_user(session, message.from_user.id)
+    await state.set_state(ChannelRegStates.enter_card_number)
+
     if user and user.card_number:
-        await state.update_data(card_number=user.card_number)
-        await state.set_state(ChannelRegStates.select_region)
-        regions = await region_repo.get_all_regions(session)
+        card = user.card_number
+        card_display = " ".join([card[i:i+4] for i in range(0, len(card), 4)])
+        card_text = (
+            f"💳 <b>Hozirgi kartangiz:</b> <code>{card_display}</code>\n\n"
+            "Yangi karta kiriting yoki shu kartani saqlash uchun\n"
+            f"<code>{card}</code> ni yuboring:"
+            if lang == "uz" else
+            f"💳 <b>Ваша текущая карта:</b> <code>{card_display}</code>\n\n"
+            "Введите новую карту или отправьте текущую для подтверждения:"
+        )
         await message.answer(
-            info_text + get_text("owner.select_region", lang),
-            reply_markup=regions_kb(regions, lang),
+            info_text + card_text,
+            reply_markup=cancel_kb(lang),
             parse_mode="HTML",
         )
     else:
-        await state.set_state(ChannelRegStates.enter_card_number)
         await message.answer(
             info_text + get_text("owner.enter_card", lang),
             reply_markup=cancel_kb(lang),
