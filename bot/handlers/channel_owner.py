@@ -225,6 +225,23 @@ async def enter_card_number(
 
     # Save card to user profile
     await user_repo.update_card_number(session, message.from_user.id, card)
+
+    data = await state.get_data()
+
+    # Check if this is card edit (not new channel registration)
+    if data.get("edit_card_channel_id"):
+        await state.clear()
+        card_display = " ".join([card[i:i+4] for i in range(0, len(card), 4)])
+        await message.answer(
+            ("✅ Karta raqami saqlandi: <code>" + card_display + "</code>"
+             if lang == "uz" else
+             "✅ Номер карты сохранён: <code>" + card_display + "</code>"),
+            reply_markup=main_menu_kb(lang),
+            parse_mode="HTML",
+        )
+        return
+
+    # Continue with channel registration flow
     await state.update_data(card_number=card)
     await state.set_state(ChannelRegStates.select_region)
 
@@ -513,12 +530,23 @@ async def manage_channel(
     status = get_text("channel.verified" if channel.is_verified else "channel.not_verified", lang)
     active_str = "🟢 Active" if channel.is_active else "🔴 Inactive"
 
+    # Get owner's card number
+    owner = await user_repo.get_user(session, callback.from_user.id)
+    card_display = "—"
+    if owner and owner.card_number:
+        card = owner.card_number
+        card_display = f"{card[:4]} **** **** {card[-4:]}"
+
     from aiogram.utils.keyboard import InlineKeyboardBuilder
 
     builder = InlineKeyboardBuilder()
     builder.button(
         text=get_text("owner.edit_prices", lang),
         callback_data=f"owner:edit_prices:{channel.id}",
+    )
+    builder.button(
+        text=("💳 Kartani o'zgartirish" if lang == "uz" else "💳 Изменить карту"),
+        callback_data=f"owner:edit_card:{channel.id}",
     )
     builder.button(
         text=get_text("owner.toggle_active", lang),
@@ -534,17 +562,39 @@ async def manage_channel(
     )
     builder.adjust(1)
 
+    manage_text = get_text(
+        "owner.manage_channel",
+        lang,
+        title=channel.channel_title,
+        username=channel.channel_username,
+        subscribers=channel.subscribers_count,
+        views=channel.avg_views,
+        status=f"{status} | {active_str}",
+    )
+    manage_text += (
+        f"\n💳 Karta: <code>{card_display}</code>"
+        if lang == "uz" else
+        f"\n💳 Карта: <code>{card_display}</code>"
+    )
+
     await callback.message.edit_text(
-        get_text(
-            "owner.manage_channel",
-            lang,
-            title=channel.channel_title,
-            username=channel.channel_username,
-            subscribers=channel.subscribers_count,
-            views=channel.avg_views,
-            status=f"{status} | {active_str}",
-        ),
+        manage_text,
         reply_markup=builder.as_markup(),
+        parse_mode="HTML",
+    )
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("owner:edit_card:"))
+async def edit_card_start(
+    callback: CallbackQuery, state: FSMContext, lang: str = "uz", **kwargs
+):
+    channel_id = int(callback.data.split(":")[2])
+    await state.set_state(ChannelRegStates.enter_card_number)
+    await state.update_data(edit_card_channel_id=channel_id)
+
+    await callback.message.edit_text(
+        get_text("owner.enter_card", lang),
         parse_mode="HTML",
     )
     await callback.answer()
