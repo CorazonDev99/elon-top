@@ -143,7 +143,7 @@ TEXTS = {
     "owner.enter_username": (
         "📝 <b>Введите username канала или группы:</b>\n\n"
         "Например: <code>@my_channel</code> или <code>@my_group</code>\n\n"
-        "⚠️ Бот должен быть администратором канала или группы!"
+        "ℹ️ Канал или группа должны быть открытыми (public)."
     ),
     "owner.select_region": "📍 <b>Выберите область:</b>",
     "owner.select_district": "📍 <b>Выберите район:</b>",

@@ -61,7 +61,7 @@ TEXTS = {
     "owner.panel": "📺 <b>قنواتي ومجموعاتي:</b>",
     "owner.no_channels": "📭 لا توجد قنوات أو مجموعات بعد.\n\nأضف واحدة!",
     "owner.add_channel": "➕ إضافة قناة أو مجموعة",
-    "owner.enter_username": "📝 <b>أدخل username القناة أو المجموعة:</b>\n\nمثال: <code>@my_channel</code>\n\n⚠️ يجب أن يكون البوت مشرفاً!",
+    "owner.enter_username": "📝 <b>أدخل username القناة أو المجموعة:</b>\n\nمثال: <code>@my_channel</code>\n\nℹ️ يجب أن تكون القناة/المجموعة عامة (public).",
     "owner.select_region": "📍 <b>اختر المنطقة:</b>",
     "owner.select_district": "📍 <b>اختر الحي:</b>",
     "owner.select_category": "📂 <b>اختر الفئة:</b>",

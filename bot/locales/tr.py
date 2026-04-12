@@ -61,7 +61,7 @@ TEXTS = {
     "owner.panel": "📺 <b>Kanallarım ve Gruplarım:</b>",
     "owner.no_channels": "📭 Henüz kanalınız/grubunuz yok.\n\nEkleyin!",
     "owner.add_channel": "➕ Kanal/Grup Ekle",
-    "owner.enter_username": "📝 <b>Kanal veya grup username girin:</b>\n\nÖrnek: <code>@my_channel</code>\n\n⚠️ Bot kanal/grup admini olmalı!",
+    "owner.enter_username": "📝 <b>Kanal veya grup username girin:</b>\n\nÖrnek: <code>@my_channel</code>\n\nℹ️ Kanal veya grup herkese açık (public) olmalıdır.",
     "owner.select_region": "📍 <b>Bölge seçin:</b>",
     "owner.select_district": "📍 <b>İlçe seçin:</b>",
     "owner.select_category": "📂 <b>Kategori seçin:</b>",

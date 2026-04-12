@@ -71,7 +71,7 @@ TEXTS = {
     "owner.panel": "📺 <b>Менинг каналларим ва гуруҳларим:</b>",
     "owner.no_channels": "📭 Сизда ҳали канал ёки гуруҳ йўқ.\n\nКаналингизни қўшинг ва реклама буюртмаларини қабул қилинг!",
     "owner.add_channel": "➕ Канал ёки гуруҳ қўшиш",
-    "owner.enter_username": "📝 <b>Канал ёки гуруҳ username киритинг:</b>\n\nМасалан: <code>@my_channel</code>\n\n⚠️ Бот канал ёки гуруҳ админлари рўйхатида бўлиши керак!",
+    "owner.enter_username": "📝 <b>Канал ёки гуруҳ username киритинг:</b>\n\nМасалан: <code>@my_channel</code>\n\nℹ️ Канал ёки гуруҳ очиқ (public) бўлиши керак.",
     "owner.select_region": "📍 <b>Вилоятни танланг:</b>",
     "owner.select_district": "📍 <b>Туманни танланг:</b>",
     "owner.select_category": "📂 <b>Категорияни танланг:</b>",

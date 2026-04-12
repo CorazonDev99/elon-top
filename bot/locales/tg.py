@@ -61,7 +61,7 @@ TEXTS = {
     "owner.panel": "📺 <b>Каналҳо ва гурӯҳҳои ман:</b>",
     "owner.no_channels": "📭 Шумо ҳоло канал ё гурӯҳ надоред.\n\nИлова кунед!",
     "owner.add_channel": "➕ Канал ё гурӯҳ илова",
-    "owner.enter_username": "📝 <b>Username-и канал ё гурӯҳро ворид кунед:</b>\n\nМисол: <code>@my_channel</code>\n\n⚠️ Бот бояд админи канал ё гурӯҳ бошад!",
+    "owner.enter_username": "📝 <b>Username-и канал ё гурӯҳро ворид кунед:</b>\n\nМисол: <code>@my_channel</code>\n\nℹ️ Канал ё гурӯҳ бояд кушод (public) бошад.",
     "owner.select_region": "📍 <b>Вилоятро интихоб кунед:</b>",
     "owner.select_district": "📍 <b>Ноҳияро интихоб кунед:</b>",
     "owner.select_category": "📂 <b>Категорияро интихоб кунед:</b>",

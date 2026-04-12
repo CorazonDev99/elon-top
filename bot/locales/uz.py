@@ -143,7 +143,7 @@ TEXTS = {
     "owner.enter_username": (
         "📝 <b>Kanal yoki guruh username kiriting:</b>\n\n"
         "Masalan: <code>@my_channel</code> yoki <code>@my_group</code>\n\n"
-        "⚠️ Bot kanal yoki guruh adminlari ro'yxatida bo'lishi kerak!"
+        "ℹ️ Kanal yoki guruh ochiq (public) bo'lishi kerak."
     ),
     "owner.select_region": "📍 <b>Viloyatni tanlang:</b>",
     "owner.select_district": "📍 <b>Tumanni tanlang:</b>",

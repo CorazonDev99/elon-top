@@ -96,7 +96,7 @@ TEXTS = {
     "owner.panel": "📺 <b>My Channels & Groups:</b>",
     "owner.no_channels": "📭 You don't have channels or groups yet.\n\nAdd one and start receiving ad orders!",
     "owner.add_channel": "➕ Add Channel or Group",
-    "owner.enter_username": "📝 <b>Enter channel or group username:</b>\n\nExample: <code>@my_channel</code> or <code>@my_group</code>\n\n⚠️ Bot must be an admin of the channel/group!",
+    "owner.enter_username": "📝 <b>Enter channel or group username:</b>\n\nExample: <code>@my_channel</code> or <code>@my_group</code>\n\nℹ️ Channel or group must be public.",
     "owner.select_region": "📍 <b>Select region:</b>",
     "owner.select_district": "📍 <b>Select district:</b>",
     "owner.select_category": "📂 <b>Select category:</b>",

@@ -61,7 +61,7 @@ TEXTS = {
     "owner.panel": "📺 <b>Каналдарым жана Топторум:</b>",
     "owner.no_channels": "📭 Азырынча канал же топ жок.\n\nКошуңуз!",
     "owner.add_channel": "➕ Канал же топ кошуу",
-    "owner.enter_username": "📝 <b>Канал же топ username киргизиңиз:</b>\n\nМисал: <code>@my_channel</code>\n\n⚠️ Бот админ болушу керек!",
+    "owner.enter_username": "📝 <b>Канал же топ username киргизиңиз:</b>\n\nМисал: <code>@my_channel</code>\n\nℹ️ Канал же топ ачык (public) болушу керек.",
     "owner.select_region": "📍 <b>Аймакты тандаңыз:</b>",
     "owner.select_district": "📍 <b>Районду тандаңыз:</b>",
     "owner.select_category": "📂 <b>Категорияны тандаңыз:</b>",

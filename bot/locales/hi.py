@@ -61,7 +61,7 @@ TEXTS = {
     "owner.panel": "📺 <b>मेरे चैनल और ग्रुप:</b>",
     "owner.no_channels": "📭 अभी कोई चैनल या ग्रुप नहीं।\n\nजोड़ें!",
     "owner.add_channel": "➕ चैनल या ग्रुप जोड़ें",
-    "owner.enter_username": "📝 <b>चैनल या ग्रुप username डालें:</b>\n\nउदाहरण: <code>@my_channel</code>\n\n⚠️ बॉट को एडमिन होना चाहिए!",
+    "owner.enter_username": "📝 <b>चैनल या ग्रुप username डालें:</b>\n\nउदाहरण: <code>@my_channel</code>\n\nℹ️ चैनल या ग्रुप सार्वजनिक (public) होना चाहिए।",
     "owner.select_region": "📍 <b>क्षेत्र चुनें:</b>",
     "owner.select_district": "📍 <b>ज़िला चुनें:</b>",
     "owner.select_category": "📂 <b>श्रेणी चुनें:</b>",

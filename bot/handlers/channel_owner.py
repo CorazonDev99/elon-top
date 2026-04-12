@@ -131,7 +131,7 @@ async def enter_username(
 
     username = username[1:]  # remove @
 
-    # ─── Verify user is admin of the channel/group ───
+    # ─── Verify channel/group exists (public API, bot does NOT need to be a member) ───
     from aiogram import Bot
     bot: Bot = message.bot
 
@@ -143,31 +143,6 @@ async def enter_username(
                 "Kanal/guruh topilmadi. Username to'g'ri yozilganini tekshiring."
                 if lang == "uz" else
                 "Канал/группа не найден(а). Проверьте username."
-            ),
-            parse_mode="HTML",
-        )
-        return
-
-    # Check that user is admin or creator
-    try:
-        member = await bot.get_chat_member(chat.id, message.from_user.id)
-    except Exception:
-        await message.answer(
-            "⚠️ " + (
-                "Bot bu kanal/guruhga kira olmadi. Botni admin qiling!"
-                if lang == "uz" else
-                "Бот не смог получить доступ. Добавьте бота админом!"
-            ),
-            parse_mode="HTML",
-        )
-        return
-
-    if member.status not in ("creator", "administrator"):
-        await message.answer(
-            "🚫 " + (
-                "Siz bu kanal/guruh admini emassiz! Faqat adminlar qo'sha oladi."
-                if lang == "uz" else
-                "Вы не админ этого канала/группы! Только админы могут добавлять."
             ),
             parse_mode="HTML",
         )
@@ -187,7 +162,7 @@ async def enter_username(
         await state.clear()
         return
 
-    # ─── Auto-fetch subscriber count ───
+    # ─── Try to fetch subscriber count (works for public channels without membership) ───
     try:
         member_count = await bot.get_chat_member_count(chat.id)
     except Exception:
